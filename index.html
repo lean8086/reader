@@ -1,0 +1,234 @@
+<style>
+  :root {
+    --color-background: #000;
+    --color-text: #fff;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  @import url('https://rsms.me/inter/inter.css');
+  html { font-family: 'Inter', sans-serif; }
+  @supports (font-variation-settings: normal) {
+    html { font-family: 'Inter var', sans-serif; }
+  }
+
+  body {
+    background: var(--color-background);
+    color: var(--color-text);
+    max-width: 50em;
+    margin: auto;
+    padding: 3em;
+  }
+
+  ::selection {
+    background-color: var(--color-text);
+    color: var(--color-background);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .card {
+    margin: 5em 0;
+  }
+
+  .card__title {
+    font-size: 2em;
+  }
+
+  .card__source {
+    font-weight: normal;
+  }
+
+  .card__source-icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: top;
+  }
+
+  .card__description {
+    line-height: 1.7em;
+  }
+
+  .btn--more {
+    border: 1px solid var(--color-text);
+    background: transparent;
+    color: var(--color-text);
+    font-size: 1.5em;
+    width: 100%;
+    padding: .5em 5em;
+    display: block;
+  }
+
+  @media (min-width: 50em) {
+    .btn--more {
+      margin: 0 auto;
+      width: auto;
+      cursor: pointer;
+    }
+
+    .btn--more:hover {
+      background: var(--color-text);
+      color: var(--color-background);
+    }
+  }
+</style>
+
+<h1>r_</h1>
+<main>
+  <button id="more" class="btn btn--more">More</button>
+</main>
+
+<script type="module">
+
+// console.log(`'${document.title}': '${document.head.querySelector('[type="application/rss+xml"]').href}',`)
+const feeds = {
+  'The Next Web': {
+    domain: 'https://thenextweb.com',
+    feed: 'https://feeds2.feedburner.com/thenextweb',
+  },
+  'SpaceX': {
+    domain: 'https://spacex.com',
+    feed: 'https://www.spacex.com/news.xml/rss.xml',
+  },
+  'Teslarati': {
+    domain: 'https://teslarati.com',
+    feed: 'https://www.teslarati.com/feed/',
+  },
+  'CSS-Tricks': {
+    domain: 'https://css-tricks.com',
+    feed: 'http://feeds.feedburner.com/CssTricks',
+  },
+  'Mashable': {
+    domain: 'https://mashable.com',
+    feed: 'http://feeds.mashable.com/Mashable',
+  },
+  'Gizmodo': {
+    domain: 'https://gizmodo.com',
+    feed: 'https://gizmodo.com/rss',
+  },
+  'WIRED': {
+    domain: 'https://wired.com',
+    feed: 'https://www.wired.com/feed/rss',
+  },
+  'GameSpot': {
+    domain: 'https://gamespot.com',
+    feed: 'https://www.gamespot.com/feeds/mashup/',
+  },
+  'Unity3d': {
+    domain: 'https://unity3d.com',
+    feed: 'https://blogs.unity3d.com/feed/',
+  },
+  'Everyday Astronaut': {
+    domain: 'https://everydayastronaut.com',
+    feed: 'https://everydayastronaut.com/feed/',
+  },
+  'Ars Technica': {
+    domain: 'https://arstechnica.com',
+    feed: 'http://feeds.arstechnica.com/arstechnica/index/',
+  },
+  'DEV Community': {
+    domain: 'https://dev.to',
+    feed: 'https://dev.to/feed',
+  },
+  'IGN Germany': {
+    domain: 'https://ign.com',
+    feed: 'https://de.ign.com/feed.xml',
+  },
+  'MIT Technology Review': {
+    domain: 'https://technologyreview.com',
+    feed: 'https://www.technologyreview.com/topnews.rss',
+  },
+  'The Verge': {
+    domain: 'https://theverge.com',
+    feed: 'https://www.theverge.com/rss/index.xml',
+  },
+  'ReadWrite': {
+    domain: 'https://readwrite.com',
+    feed: 'https://readwrite.com/feed/',
+  },
+  'Engadget': {
+    domain: 'https://engadget.com',
+    feed: 'https://www.engadget.com/rss.xml',
+  },
+};
+
+
+function extractContent(feed, xml) {
+  // TODO: continue if 'lastBuildDate' is different than local
+  const extractableFields = ['title', 'description', 'link', 'pubDate'];
+  return [].reduce.call(xml.querySelectorAll('item'), (acc, item) => {
+    const data = { feed };
+    extractableFields.forEach(extract => (
+      data[extract] = item.querySelector(extract).textContent
+    ));
+    return [...acc, data];
+  }, []);
+}
+
+async function getContentFromFeeds(feeds) {
+  try {
+    return await Promise.all(Object.values(feeds).map(({ feed }, feedIndex) => (
+      fetch(`https://cors-anywhere.herokuapp.com/${feed}`)
+        .then(response => response.text())
+        .then(str => (new DOMParser()).parseFromString(str, 'text/xml'))
+        .then(xml => extractContent(feedIndex, xml))
+    )))
+      // Merge all the results
+      .then(results => [].concat.apply([], results))
+      // Sort by date
+      .then(results => results.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate)));
+  } catch (err) {
+    throw err;
+  }
+}
+
+function formatDate(pubDate) {
+  return (new Date(pubDate)).toLocaleDateString('en', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    hourCycle: 'h24',
+  });
+}
+
+function formatDescription(description) {
+  return description.replace(/(<([^>]+)>)/ig, '');
+}
+
+function renderItem(props, feeds) {
+  return `
+    <article class="card">
+      <h2 class="card__title">
+        <a class="card__link" href=${props.link} target="_blank">${props.title}</a>
+      </h2>
+      <h3 class="card__source">
+        <a href=${Object.values(feeds)[props.feed].domain} target="_blank">
+          <img class="card__source-icon" src="${Object.values(feeds)[props.feed].domain}/favicon.ico" loading="lazy"/>
+          ${Object.keys(feeds)[props.feed]}
+        </a>
+        ·
+        <time>${formatDate(props.pubDate)}</time>
+      </h3>
+      <p class="card__description">${formatDescription(props.description)}</p>
+    </article>
+  `;
+}
+
+async function getPage(page) {
+  const itemsPerPage = 10;
+  const contents = await getContentFromFeeds(feeds);
+  return contents.slice((page * itemsPerPage) - itemsPerPage, page * itemsPerPage).map(c => renderItem(c, feeds)).join('');
+}
+
+(async () => {
+  let currentPage = 0;
+  const more = document.querySelector('#more');
+  more.insertAdjacentHTML('beforeBegin', await getPage(currentPage += 1));
+  more.addEventListener('click', async () => more.insertAdjacentHTML('beforeBegin', await getPage(currentPage += 1)));
+})();
+
+</script>
