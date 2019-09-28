@@ -205,7 +205,11 @@ function formatDate(pubDate) {
 }
 
 function formatDescription(description) {
-  return description.replace(/(<([^>]+)>)/ig, '');
+  let formatted = description.replace(/(<([^>]+)>)/ig, '');
+  if (formatted.length > 1000) {
+    formatted = `${formatted.substring(0, 1000)}...`;
+  }
+  return formatted;
 }
 
 function renderItem(props, feeds) {
