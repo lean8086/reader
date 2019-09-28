@@ -20,7 +20,7 @@
     color: var(--color-text);
     max-width: 50em;
     margin: auto;
-    padding: 3em;
+    padding: 2em;
   }
 
   ::selection {
@@ -38,11 +38,12 @@
   }
 
   .card__title {
-    font-size: 2em;
+    font-size: 1.8em;
   }
 
   .card__source {
     font-weight: normal;
+
   }
 
   .card__source-icon {
@@ -65,16 +66,20 @@
     display: block;
   }
 
+  .btn--more:hover {
+    background: var(--color-text);
+    color: var(--color-background);
+  }
+
   @media (min-width: 50em) {
+    body {
+      padding: 3em;
+    }
+
     .btn--more {
       margin: 0 auto;
       width: auto;
       cursor: pointer;
-    }
-
-    .btn--more:hover {
-      background: var(--color-text);
-      color: var(--color-background);
     }
   }
 </style>
@@ -99,6 +104,7 @@ const feeds = {
   'Teslarati': {
     domain: 'https://teslarati.com',
     feed: 'https://www.teslarati.com/feed/',
+    altFavicon: 'https://www.teslarati.com/wp-content/uploads/2015/10/cropped-Teslarati-iOS-White-Leaf-Icon-512x512-32x32.png',
   },
   'CSS-Tricks': {
     domain: 'https://css-tricks.com',
@@ -111,6 +117,7 @@ const feeds = {
   'Gizmodo': {
     domain: 'https://gizmodo.com',
     feed: 'https://gizmodo.com/rss',
+    altFavicon: 'https://i.kinja-img.com/gawker-media/image/upload/c_fill,f_auto,fl_progressive,g_center,h_80,q_80,w_80/fdj3buryz5nuzyf2k620.png',
   },
   'WIRED': {
     domain: 'https://wired.com',
@@ -155,6 +162,7 @@ const feeds = {
   'Engadget': {
     domain: 'https://engadget.com',
     feed: 'https://www.engadget.com/rss.xml',
+    altFavicon: 'https://s.blogsmithmedia.com/www.engadget.com/assets-hd5b7ca125ee4d9a2872d820a7713960b/images/favicon-32x32.png',
   },
 };
 
@@ -201,6 +209,7 @@ function formatDescription(description) {
 }
 
 function renderItem(props, feeds) {
+  const feedProps = Object.values(feeds)[props.feed];
   return `
     <article class="card">
       <h2 class="card__title">
@@ -208,7 +217,11 @@ function renderItem(props, feeds) {
       </h2>
       <h3 class="card__source">
         <a href=${Object.values(feeds)[props.feed].domain} target="_blank">
-          <img class="card__source-icon" src="${Object.values(feeds)[props.feed].domain}/favicon.ico" loading="lazy"/>
+          <img
+            src="${!feedProps.altFavicon ? `${feedProps.domain}/favicon.ico` : feedProps.altFavicon}"
+            class="card__source-icon"
+            loading="lazy"
+          />
           ${Object.keys(feeds)[props.feed]}
         </a>
         ·
