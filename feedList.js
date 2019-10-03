@@ -30,7 +30,7 @@ export default {
   // CODE
   'Human Who Codes': { domain: 'https://humanwhocodes.com', feed: 'https://humanwhocodes.com/feeds/blog.xml' },
   'Overreacted': { domain: 'https://overreacted.io', feed: 'https://overreacted.io/rss.xml' },
-  'Smashing Magazine': { domain: 'https://www.smashingmagazine.com', feed: 'https://www.smashingmagazine.com/feed/' },
+  'Smashing Magazine': { domain: 'https://www.smashingmagazine.com', feed: 'https://www.smashingmagazine.com/feed/', altFavicon: 'https://www.smashingmagazine.com/images/favicon/favicon.png' },
   'CSS-Tricks': { domain: 'https://css-tricks.com', feed: 'http://feeds.feedburner.com/CssTricks' },
   'DEV Community': { domain: 'https://dev.to', feed: 'https://dev.to/feed' },
 };
