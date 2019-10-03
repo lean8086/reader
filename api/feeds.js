@@ -4,8 +4,8 @@ import { parseStringPromise } from 'xml2js';
 
 function formatDescription(description) {
   let formatted = description.replace(/(<([^>]+)>)/ig, '').trim();
-  if (formatted.length > 1000) {
-    formatted = `${formatted.substring(0, 1000)}[...]`;
+  if (formatted.length > 256) {
+    formatted = `${formatted.substring(0, 256)}[...]`;
   }
   return formatted;
 }

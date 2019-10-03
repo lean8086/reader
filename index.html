@@ -41,9 +41,14 @@
     font-size: 1.8em;
   }
 
+  .card__image {
+    width: 100%;
+    border-radius: .5em;
+    filter: saturate(75%);
+  }
+
   .card__source {
     font-weight: normal;
-
   }
 
   .card__source-icon {
@@ -81,6 +86,11 @@
       width: auto;
       cursor: pointer;
     }
+
+    .card__image {
+      width: 100%;
+      border-radius: 1em;
+    }
   }
 </style>
 
@@ -90,7 +100,7 @@
 
 import feedList from './feedList.js';
 
-fetch('/api/feeds?offset=25')
+fetch('/api/feeds?offset=25&dlength=280')
   .then(res => res.json())
   .then(items => items.map(renderItem).join(''))
   .then(content => document.body.insertAdjacentHTML('beforeEnd', content));
@@ -116,6 +126,11 @@ function renderItem(props) {
           ${Object.keys(feedList)[props.feed]}
         </a> &middot; <time>${formatDate(props.date)}</time>
       </h3>
+      ${props.image && `
+        <a href=${props.link} target="_blank">
+          <img class="card__image" src="${props.image}"/>
+        </a>`
+      }
       <p class="card__description">${props.description}</p>
     </article>
   `;
