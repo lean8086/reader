@@ -85,91 +85,40 @@
 </style>
 
 <h1>r_</h1>
-<main>
-  <button id="more" class="btn btn--more">More</button>
-</main>
 
 <script type="module">
-import feeds from './feeds.mjs';
 
-function extractContent(feed, xml) {
-  // TODO: continue if 'lastBuildDate' is different than local
-  const extractableFields = ['title', 'description', 'link', 'pubDate'];
-  return [].reduce.call(xml.querySelectorAll('item'), (acc, item) => {
-    const data = { feed };
-    extractableFields.forEach(extract => (
-      data[extract] = item.querySelector(extract).textContent
-    ));
-    return [...acc, data];
-  }, []);
+import feedList from './feedList.js';
+
+fetch('/api/feeds?offset=25')
+  .then(res => res.json())
+  .then(items => items.map(renderItem).join(''))
+  .then(content => document.body.insertAdjacentHTML('beforeEnd', content));
+
+function formatDate(date) {
+  return (new Date(date)).toLocaleTimeString([], { timeStyle: 'short' }).toLowerCase();
 }
 
-async function getContentFromFeeds(feeds) {
-  try {
-    return await Promise.all(Object.values(feeds).map(({ feed }, feedIndex) => (
-      fetch(`https://cors-anywhere.herokuapp.com/${feed}`)
-        .then(response => response.text())
-        .then(str => (new DOMParser()).parseFromString(str, 'text/xml'))
-        .then(xml => extractContent(feedIndex, xml))
-    )))
-      // Merge all the results
-      .then(results => [].concat.apply([], results))
-      // Sort by date
-      .then(results => results.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate)));
-  } catch (err) {
-    throw err;
-  }
-}
-
-function formatDate(pubDate) {
-  return (new Date(pubDate)).toLocaleTimeString([], {
-    timeStyle: 'short',
-  }).toLowerCase();
-}
-
-function formatDescription(description) {
-  let formatted = description.replace(/(<([^>]+)>)/ig, '');
-  if (formatted.length > 1000) {
-    formatted = `${formatted.substring(0, 1000)}...`;
-  }
-  return formatted;
-}
-
-function renderItem(props, feeds) {
-  const feedProps = Object.values(feeds)[props.feed];
+function renderItem(props) {
+  const feedProps = Object.values(feedList)[props.feed];
   return `
     <article class="card">
       <h2 class="card__title">
         <a class="card__link" href=${props.link} target="_blank">${props.title}</a>
       </h2>
       <h3 class="card__source">
-        <a href=${Object.values(feeds)[props.feed].domain} target="_blank">
+        <a href=${Object.values(feedList)[props.feed].domain} target="_blank">
           <img
             src="${!feedProps.altFavicon ? `${feedProps.domain}/favicon.ico` : feedProps.altFavicon}"
             class="card__source-icon"
             loading="lazy"
           />
-          ${Object.keys(feeds)[props.feed]}
-        </a>
-        ·
-        <time>${formatDate(props.pubDate)}</time>
+          ${Object.keys(feedList)[props.feed]}
+        </a> &middot; <time>${formatDate(props.date)}</time>
       </h3>
-      <p class="card__description">${formatDescription(props.description)}</p>
+      <p class="card__description">${props.description}</p>
     </article>
   `;
 }
-
-async function getPage(page) {
-  const itemsPerPage = 10;
-  const contents = await getContentFromFeeds(feeds);
-  return contents.slice((page * itemsPerPage) - itemsPerPage, page * itemsPerPage).map(c => renderItem(c, feeds)).join('');
-}
-
-(async () => {
-  let currentPage = 0;
-  const more = document.querySelector('#more');
-  more.insertAdjacentHTML('beforeBegin', await getPage(currentPage += 1));
-  more.addEventListener('click', async () => more.insertAdjacentHTML('beforeBegin', await getPage(currentPage += 1)));
-})();
 
 </script>

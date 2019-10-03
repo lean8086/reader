@@ -1,0 +1,25 @@
+{
+  "name": "reader",
+  "version": "1.0.0",
+  "description": "This directory is a brief example of a vanilla site that can be deployed with ZEIT Now and zero configuration.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lean8086/reader.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lean8086/reader/issues"
+  },
+  "homepage": "https://github.com/lean8086/reader#readme",
+  "dependencies": {
+    "node-fetch": "^2.6.0",
+    "xml2js": "^0.4.22",
+    "xmldom": "^0.1.27"
+  }
+}
