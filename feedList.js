@@ -26,7 +26,6 @@ export default {
   'The MagPi Magazine': { domain: 'https://www.raspberrypi.org/magpi/', feed: 'https://www.raspberrypi.org/magpi/feed/' },
   'Tested': { domain: 'https://www.tested.com', feed: 'https://www.tested.com/feeds/' },
   'All3DP': { domain: 'https://all3dp.com', feed: 'https://all3dp.com/feed/' },
-  'Adafruit': { domain: 'https://www.adafruit.com', feed: 'http://blog.adafruit.com/feed/' },
   // CODE
   'Human Who Codes': { domain: 'https://humanwhocodes.com', feed: 'https://humanwhocodes.com/feeds/blog.xml' },
   'Overreacted': { domain: 'https://overreacted.io', feed: 'https://overreacted.io/rss.xml' },
