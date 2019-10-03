@@ -20,7 +20,7 @@ function extractContent(xml, feedIndex) {
       link: item.link[0].$ ? item.link[0].$.href : item.link[0],
       date: item.pubDate ? item.pubDate[0] : item.published[0] ? item.published[0] : item.published,
       description: formatDescription(item.description ? item.description[0] : item.content[0]._),
-      image: item.enclosure ? item.enclosure[0].$.url : undefined,
+      image: item.enclosure && item.enclosure[0].$.type.includes('image') ? item.enclosure[0].$.url : undefined,
       feed: feedIndex,
     }
   ]), []);
