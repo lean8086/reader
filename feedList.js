@@ -13,9 +13,9 @@ export default {
   'ReadWrite': { domain: 'https://readwrite.com', feed: 'https://readwrite.com/feed/' },
   'Engadget': { domain: 'https://engadget.com', feed: 'https://www.engadget.com/rss.xml', altFavicon: 'https://s.blogsmithmedia.com/www.engadget.com/assets-hd5b7ca125ee4d9a2872d820a7713960b/images/favicon-32x32.png' },
   // GAMING
-  'Polygon': { domain: 'https://www.polygon.com', feed: 'https://www.polygon.com/rss/index.xml' },
+  'Polygon': { domain: 'https://www.polygon.com', feed: 'https://www.polygon.com/rss/index.xml', altFavicon: 'https://cdn.vox-cdn.com/community_logos/51927/38.png' },
   'GameSpot': { domain: 'https://gamespot.com', feed: 'https://www.gamespot.com/feeds/mashup/' },
-  'Unity3d': { domain: 'https://unity3d.com', feed: 'https://blogs.unity3d.com/feed/' },
+  'Unity3d': { domain: 'https://unity3d.com', feed: 'https://blogs.unity3d.com/feed/', altFavicon: 'https://unity.com/themes/contrib/unity_base/images/favicons/apple-touch-icon-72x72.png' },
   'IGN Germany': { domain: 'https://ign.com', feed: 'https://de.ign.com/feed.xml' },
   // MAKER
   'Prusa3D': { domain: 'https://www.prusa3d.com', feed: 'https://www.prusa3d.com/feed/' },
