@@ -33,6 +33,7 @@ async function fetchFeeds(config) {
         .then(res => res.text())
         .then(body => parseStringPromise(body))
         .then(xml => extractContent(xml, feedIndex))
+        .catch(() => {})
     ))
   )
     // Flat merge all the results
