@@ -1,5 +1,9 @@
+<meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width"/>
+<title>🍌</title>
 <style>
+  @import url('https://rsms.me/inter/inter.css');
+
   :root {
     --color-background: #000;
     --color-text: #fff;
@@ -7,20 +11,6 @@
 
   * {
     box-sizing: border-box;
-  }
-
-  @import url('https://rsms.me/inter/inter.css');
-  html { font-family: 'Inter', sans-serif; }
-  @supports (font-variation-settings: normal) {
-    html { font-family: 'Inter var', sans-serif; }
-  }
-
-  body {
-    background: var(--color-background);
-    color: var(--color-text);
-    max-width: 50em;
-    margin: auto;
-    padding: 2em;
   }
 
   ::selection {
@@ -33,8 +23,33 @@
     text-decoration: none;
   }
 
+  body {
+    background: var(--color-background);
+    font-family: 'Inter', sans-serif;
+    color: var(--color-text);
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+
+  .panel {
+    max-width: 50em;
+  }
+
+  .panel,
+  .menu {
+    padding: 2em;
+  }
+
+  .menu__feed {
+    margin: 0 0 1.5em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
   .card {
-    margin: 5em 0;
+    margin: 0 0 5em;
   }
 
   .card__title {
@@ -51,14 +66,14 @@
     font-weight: normal;
   }
 
-  .card__source-icon {
+  .card__description {
+    line-height: 1.7em;
+  }
+
+  .feed__icon {
     width: 1em;
     height: 1em;
     vertical-align: top;
-  }
-
-  .card__description {
-    line-height: 1.7em;
   }
 
   .btn--more {
@@ -76,9 +91,52 @@
     color: var(--color-background);
   }
 
+  .slideout-menu {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 256px;
+    min-height: 100vh;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    z-index: 0;
+    display: none;
+  }
+
+  .slideout-menu-left {
+    left: 0;
+  }
+
+  .slideout-menu-right {
+    right: 0;
+  }
+
+  .slideout-panel {
+    position: relative;
+    z-index: 1;
+    will-change: transform;
+    background: var(--color-background);
+    min-height: 100vh;
+  }
+
+  .slideout-open,
+  .slideout-open body,
+  .slideout-open .slideout-panel {
+    overflow: hidden;
+  }
+
+  .slideout-open .slideout-menu {
+    display: block;
+  }
+
   @media (min-width: 50em) {
-    body {
+    .menu,
+    .panel {
       padding: 3em;
+    }
+
+    .card__title {
+      font-size: 2em;
     }
 
     .btn--more {
@@ -87,52 +145,92 @@
       cursor: pointer;
     }
 
-    .card__image {
-      width: 100%;
-      border-radius: 1em;
+    .slideout-menu {
+      width: 20em;
     }
+
+    .slideout-panel {
+      margin-left: 20em;
+    }
+
+    .slideout-menu {
+      display: block;
+    }
+  }
+
+  @supports (font-variation-settings: normal) {
+    body { font-family: 'Inter var', sans-serif; }
   }
 </style>
 
-<h1>r_</h1>
+<div class="menu"><h1>🍌</h1></div>
+<main class="panel"></main>
 
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
 <script type="module">
-
 import feedList from './feedList.js';
+
+// PANEL /////////////////////////////////////////
 
 fetch('/api/feeds?offset=25')
   .then(res => res.json())
-  .then(items => items.map(renderItem).join(''))
-  .then(content => document.body.insertAdjacentHTML('beforeEnd', content));
+  .then(items => items.map(Item).join(''))
+  .then(content => document.querySelector('.panel').innerHTML = content);
 
 function formatDate(date) {
   return (new Date(date)).toLocaleTimeString([], { timeStyle: 'short' }).toLowerCase();
 }
 
-function renderItem(props) {
-  const feedProps = Object.values(feedList)[props.feed];
+function Item({ link, title, feed, date, image, description }) {
   return `
     <article class="card">
       <h2 class="card__title">
-        <a class="card__link" href=${props.link} target="_blank">${props.title}</a>
+        <a class="card__link" href=${link} target="_blank">${title}</a>
       </h2>
       <h3 class="card__source">
-        <a href=${Object.values(feedList)[props.feed].domain} target="_blank">
-          <img
-            src="${!feedProps.altFavicon ? `${feedProps.domain}/favicon.ico` : feedProps.altFavicon}"
-            class="card__source-icon"
-            loading="lazy"
-          />
-          ${Object.keys(feedList)[props.feed]}
-        </a> &middot; <time>${formatDate(props.date)}</time>
+        ${Feed({
+          name: Object.keys(feedList)[feed],
+          ...Object.values(feedList)[feed]
+        })}
+        &middot; <time>${formatDate(date)}</time>
       </h3>
-      ${props.image ? `
-        <a href=${props.link} target="_blank">
-          <img class="card__image" src="${props.image}"/>
+      ${image ? `
+        <a href=${link} target="_blank">
+          <img class="card__image" src="${image}"/>
         </a>` : ''
       }
-      <p class="card__description">${props.description}</p>
+      <p class="card__description">${description}</p>
     </article>
+  `;
+}
+
+// MENU //////////////////////////////////////////
+
+new Slideout({
+  'panel': document.querySelector('.panel'),
+  'menu': document.querySelector('.menu'),
+  'padding': 256,
+  'tolerance': 70
+});
+
+document.querySelector('.menu').insertAdjacentHTML('beforeEnd', Object.keys(feedList).map(name => (`
+  <div class="menu__feed">
+    ${Feed({ name, ...feedList[name] })}
+  </div>
+`)).join(''));
+
+// OTHERS ////////////////////////////////////////
+
+function Feed({ domain, altFavicon, name }) {
+  return `
+    <a class="feed" href=${domain} target="_blank">
+      <img
+        src="${!altFavicon ? `${domain}/favicon.ico` : altFavicon}"
+        class="feed__icon"
+        loading="lazy"
+      />
+      ${name}
+    </a>
   `;
 }
 
