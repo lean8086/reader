@@ -13,17 +13,25 @@ function formatDescription(description) {
 function extractContent(xml, feedIndex) {
   // TODO: lastBuildDate = xml.rss ? xml.rss.channel[0].lastBuildDate[0] : xml.feed.updated[0];
   const items = xml.rss ? xml.rss.channel[0].item : xml.feed.entry;
-  return items.reduce((acc, item) => ([
-    ...acc,
-    {
-      title: item.title[0],
-      link: item.link[0].$ ? item.link[0].$.href : item.link[0],
-      date: item.pubDate ? item.pubDate[0] : item.published[0] ? item.published[0] : item.published,
-      description: formatDescription(item.description ? item.description[0] : item.content[0]._),
-      image: item.enclosure && item.enclosure[0].$.type.includes('image') ? item.enclosure[0].$.url : undefined,
-      feed: feedIndex,
-    }
-  ]), []);
+  return items.reduce((acc, item) => {
+    const description = item.description ? item.description[0] : item.content[0]._;
+    console.log(description)
+    return [
+      ...acc,
+      {
+        title: item.title[0],
+        link: item.link[0].$ ? item.link[0].$.href : item.link[0],
+        date: item.pubDate ? item.pubDate[0] : item.published[0] ? item.published[0] : item.published,
+        description: formatDescription(description),
+        image: item.enclosure && item.enclosure[0].$.type.includes('image') ?
+          item.enclosure[0].$.url :
+          /<img/i.test(description) ?
+            /<img[^>]+src="?([^"\s]+)"?\s*\/>/i.exec(description)[1] :
+            undefined,
+        feed: feedIndex,
+      }
+    ];
+  }, []);
 }
 
 function fetchOne(feedName) {
