@@ -1,7 +1,6 @@
 export default {
   // TECH
   'The Next Web': { domain: 'https://thenextweb.com', feed: 'https://feeds2.feedburner.com/thenextweb' },
-  'SpaceX': { domain: 'https://spacex.com', feed: 'https://www.spacex.com/news.xml/rss.xml' },
   'Teslarati': { domain: 'https://teslarati.com', feed: 'https://www.teslarati.com/feed/', altFavicon: 'https://www.teslarati.com/wp-content/uploads/2015/10/cropped-Teslarati-iOS-White-Leaf-Icon-512x512-32x32.png' },
   'Mashable': { domain: 'https://mashable.com', feed: 'http://feeds.mashable.com/Mashable' },
   'Gizmodo': { domain: 'https://gizmodo.com', feed: 'https://gizmodo.com/rss', altFavicon: 'https://i.kinja-img.com/gawker-media/image/upload/c_fill,f_auto,fl_progressive,g_center,h_80,q_80,w_80/fdj3buryz5nuzyf2k620.png' },

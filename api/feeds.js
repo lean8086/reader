@@ -2,8 +2,13 @@ import feedList from '../feedList';
 import fetch from 'node-fetch';
 import { parseStringPromise } from 'xml2js';
 
+const blacklist = new RegExp([
+  'Read more...',
+  'Continue reading&hellip;',
+].join('|'));
+
 function formatDescription(description) {
-  let formatted = description.replace(/(<([^>]+)>)/ig, '').trim();
+  let formatted = description.replace(/(<([^>]+)>)/ig, '').replace(blacklist, '').trim();
   if (formatted.length > 256) {
     formatted = `${formatted.substring(0, 256)}[...]`;
   }
@@ -15,7 +20,6 @@ function extractContent(xml, feedIndex) {
   const items = xml.rss ? xml.rss.channel[0].item : xml.feed.entry;
   return items.reduce((acc, item) => {
     const description = item.description ? item.description[0] : item.content[0]._;
-    console.log(description)
     return [
       ...acc,
       {
