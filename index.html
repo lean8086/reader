@@ -170,12 +170,18 @@
 <script type="module">
 import feedList from './feedList.js';
 
+const menu = document.querySelector('.menu');
+const panel = document.querySelector('.panel');
+
 // PANEL /////////////////////////////////////////
 
-fetch('/api/feeds?offset=25')
-  .then(res => res.json())
-  .then(items => items.map(Item).join(''))
-  .then(content => document.querySelector('.panel').innerHTML = content);
+function fetchAndRender(config) {
+  fetch(`/api/feeds?offset=25${config && config.feed ? `&feed=${config.feed}` : ''}`)
+    .then(res => res.json())
+    .then(items => items.map(Item).join(''))
+    .then(content => panel.innerHTML = content);
+}
+fetchAndRender();
 
 function formatDate(date) {
   return (new Date(date)).toLocaleTimeString([], { timeStyle: 'short' }).toLowerCase();
@@ -206,20 +212,29 @@ function Item({ link, title, feed, date, image, description }) {
 
 // MENU //////////////////////////////////////////
 
-new Slideout({
-  'panel': document.querySelector('.panel'),
-  'menu': document.querySelector('.menu'),
-  'padding': 256,
-  'tolerance': 70
-});
+const slideout = new Slideout({ panel, menu, padding: 256, tolerance: 70 });
 
-document.querySelector('.menu').insertAdjacentHTML('beforeEnd', Object.keys(feedList).map(name => (`
+menu.insertAdjacentHTML('beforeEnd', Object.keys(feedList).map(name => (`
   <div class="menu__feed">
     ${Feed({ name, ...feedList[name] })}
   </div>
 `)).join(''));
 
-// OTHERS ////////////////////////////////////////
+document.querySelector('h1').addEventListener('click', () => {
+  slideout.close();
+  fetchAndRender();
+});
+
+// FEEDS /////////////////////////////////////////
+
+document.body.addEventListener('click', (ev) => {
+  if (ev.target.classList.contains('feed')) {
+    ev.preventDefault();
+    slideout.close();
+    const feed = ev.target.textContent.trim();
+    fetchAndRender({ feed });
+  }
+});
 
 function Feed({ domain, altFavicon, name }) {
   return `
