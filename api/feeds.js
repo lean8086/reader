@@ -26,26 +26,36 @@ function extractContent(xml, feedIndex) {
   ]), []);
 }
 
-async function fetchFeeds(config) {
-  return await Promise.all(
-    Object.values(feedList).map(({ feed }, feedIndex) => (
-      fetch(feed)
+function fetchOne(feedName) {
+  const feedIndex = Object.keys(feedList).indexOf(feedName);
+  return fetch(feedList[feedName].feed)
+    .then(res => res.text())
+    .then(body => parseStringPromise(body))
+    .then(xml => extractContent(xml, feedIndex))
+    .catch(() => {});
+}
+
+function fetchAll() {
+  return Promise.all(
+    Object.values(feedList).map(({ feed }, feedIndex) => {
+      return fetch(feed)
         .then(res => res.text())
         .then(body => parseStringPromise(body))
         .then(xml => extractContent(xml, feedIndex))
-        .catch(() => {})
-    ))
-  )
-    // Flat merge all the results
-    .then(items => [].concat.apply([], items))
-    // Sort by date
-    .then(items => items.sort((a, b) => new Date(b.date) - new Date(a.date)))
-    // Paginate
-    .then(items => items.slice(0, config.offset))
+        .catch(() => {});
+    })
+  );
 }
 
 module.exports = async (req, res) => {
-  const { offset } = req.query;
-  const items = await fetchFeeds({ offset });
+  const { offset = 10, feed } = req.query;
+  const fetchItems = feed ? fetchOne : fetchAll;
+  let items = await fetchItems(feed);
+  // Flat merge all the results
+  items = [].concat.apply([], items);
+  // Sort by date
+  items = items.sort((a, b) => new Date(b.date) - new Date(a.date));
+  // Paginate
+  items = items.slice(0, offset);
   res.send(items);
-}
+};
