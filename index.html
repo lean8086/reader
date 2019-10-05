@@ -54,6 +54,11 @@
 
   .card__title {
     font-size: 1.8em;
+    letter-spacing: -0.055em;
+    line-height: 0.9em;
+    text-indent: -0.03em;
+    font-weight: 700;
+    line-height: 1.25em;
   }
 
   .card__image {
@@ -63,7 +68,7 @@
   }
 
   .card__source {
-    font-weight: normal;
+    font-weight: 350;
   }
 
   .card__description {
@@ -183,8 +188,15 @@ function fetchAndRender(config) {
 }
 fetchAndRender();
 
+const today = new Date();
+
 function formatDate(date) {
-  return (new Date(date)).toLocaleTimeString([], { timeStyle: 'short' }).toLowerCase();
+  const d = new Date(date);
+  const isFromToday = d.getDay() === today.getDay();
+  return d.toLocaleTimeString([], {
+    dateStyle: !isFromToday ? 'medium' : undefined,
+    timeStyle: isFromToday ? 'short' : undefined,
+  });
 }
 
 function Item({ link, title, feed, date, image, description }) {
