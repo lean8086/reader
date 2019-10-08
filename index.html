@@ -192,7 +192,7 @@ let page = 1;
 const today = new Date();
 
 function fetchAndRender(config) {
-  panel.innerHTML = 'Loading...';
+  panel.innerHTML = '<h2 class="card__title">Loading...</h2>';
   fetch(`/api/feeds?offset=25&page=${page}${config && config.feed ? `&feed=${config.feed}` : ''}`)
     .then(res => res.json())
     .then(items => items.map(Item).join(''))
