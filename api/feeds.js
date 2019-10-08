@@ -8,11 +8,17 @@ const blacklist = new RegExp([
 ].join('|'));
 
 function formatDescription(description) {
-  let formatted = description.replace(/(<([^>]+)>)/ig, '').replace(blacklist, '').trim();
-  if (formatted.length > 256) {
-    formatted = `${formatted.substring(0, 256)}[...]`;
-  }
-  return formatted;
+  return description
+    // Strip HTML
+    .replace(/(<([^>]+)>)/ig, '')
+    // Avoid bad patterns
+    .replace(blacklist, '')
+    // Normalize whitespaces
+    .replace(/\s\s+/g, ' ')
+    // Trim ;)
+    .trim()
+    // Cut
+    .substring(0, 256);
 }
 
 function extractContent(xml, feedIndex) {
