@@ -180,15 +180,17 @@ const panel = document.querySelector('.panel');
 
 // PANEL /////////////////////////////////////////
 
+let page = 1;
+const today = new Date();
+
 function fetchAndRender(config) {
-  fetch(`/api/feeds?offset=25${config && config.feed ? `&feed=${config.feed}` : ''}`)
+  panel.innerHTML = 'Loading...';
+  fetch(`/api/feeds?offset=25&page=${page}${config && config.feed ? `&feed=${config.feed}` : ''}`)
     .then(res => res.json())
     .then(items => items.map(Item).join(''))
-    .then(content => panel.innerHTML = content);
+    .then(content => panel.innerHTML = `${content}${More()}`);
 }
 fetchAndRender();
-
-const today = new Date();
 
 function formatDate(date) {
   const d = new Date(date);
@@ -197,6 +199,10 @@ function formatDate(date) {
     dateStyle: !isFromToday ? 'medium' : undefined,
     timeStyle: isFromToday ? 'short' : undefined,
   });
+}
+
+function More() {
+  return `<button class="btn btn--more">More</button>`;
 }
 
 function Item({ link, title, feed, date, image, description }) {
@@ -245,6 +251,9 @@ document.body.addEventListener('click', (ev) => {
     slideout.close();
     const feed = ev.target.textContent.trim();
     fetchAndRender({ feed });
+  } else if (ev.target.classList.contains('btn--more')) {
+    page++;
+    fetchAndRender();
   }
 });
 

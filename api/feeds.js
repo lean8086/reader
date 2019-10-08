@@ -66,7 +66,11 @@ function fetchAll() {
 }
 
 module.exports = async (req, res) => {
-  const { offset = 10, feed } = req.query;
+  const {
+    offset = 10,
+    page = 1,
+    feed,
+  } = req.query;
   const fetchItems = feed ? fetchOne : fetchAll;
   let items = await fetchItems(feed);
   // Flat merge all the results
@@ -74,6 +78,6 @@ module.exports = async (req, res) => {
   // Sort by date
   items = items.sort((a, b) => new Date(b.date) - new Date(a.date));
   // Paginate
-  items = items.slice(0, offset);
+  items = items.slice(offset * (page - 1), offset * page);
   res.send(items);
 };
