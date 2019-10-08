@@ -15,7 +15,9 @@ export default {
   'Polygon': { domain: 'https://www.polygon.com', feed: 'https://www.polygon.com/rss/index.xml', altFavicon: 'https://cdn.vox-cdn.com/community_logos/51927/38.png' },
   'GameSpot': { domain: 'https://gamespot.com', feed: 'https://www.gamespot.com/feeds/mashup/' },
   'Unity3d': { domain: 'https://unity3d.com', feed: 'https://blogs.unity3d.com/feed/', altFavicon: 'https://unity.com/themes/contrib/unity_base/images/favicons/apple-touch-icon-72x72.png' },
-  'IGN Germany': { domain: 'https://ign.com', feed: 'https://de.ign.com/feed.xml' },
+  'IGN': { domain: 'https://ign.com', feed: 'https://de.ign.com/articles/news/rss' },
+  'Gamasutra': { domain: 'https://gamasutra.com/', feed: 'http://feeds.feedburner.com/GamasutraNews' },
+  'Gamesindustry': { domain: 'https://www.gamesindustry.biz/', feed: 'https://www.gamesindustry.biz/rss/gamesindustry_news_feed.rss' },
   // MAKER
   'Prusa3D': { domain: 'https://www.prusa3d.com', feed: 'https://www.prusa3d.com/feed/', altFavicon: 'https://www.prusa3d.com/wp-content/uploads/2014/10/prusa_fav_72x72.png' },
   'Prusa Printers': { domain: 'https://blog.prusaprinters.org', feed: 'https://blog.prusaprinters.org/feed/', altFavicon: 'https://cdn.blog.prusaprinters.org/wp-content/themes/blog-prusaprinters/favicons/favicon-32x32.png' },
@@ -24,7 +26,6 @@ export default {
   'Raspberry Pi': { domain: 'https://www.raspberrypi.org/blog/', feed: 'https://www.raspberrypi.org/feed/', altFavicon: 'https://www.raspberrypi.org/app/themes/mind-control/images/favicon.png' },
   'The MagPi Magazine': { domain: 'https://www.raspberrypi.org/magpi/', feed: 'https://www.raspberrypi.org/magpi/feed/', altFavicon: 'https://www.raspberrypi.org/app/themes/mind-control/images/favicon.png' },
   'Tested': { domain: 'https://www.tested.com', feed: 'https://www.tested.com/feeds/', altFavicon: 'https://d2rormqr1qwzpz.cloudfront.net/static/tested_favicon_32.png?v=3' },
-  'All3DP': { domain: 'https://all3dp.com', feed: 'https://all3dp.com/feed/' },
   // CODE
   'Human Who Codes': { domain: 'https://humanwhocodes.com', feed: 'https://humanwhocodes.com/feeds/blog.xml', altFavicon: 'https://humanwhocodes.com/images/favicon.png' },
   'Overreacted': { domain: 'https://overreacted.io', feed: 'https://overreacted.io/rss.xml', altFavicon: 'https://overreacted.io/icons/icon-48x48.png' },
