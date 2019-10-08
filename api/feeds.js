@@ -36,7 +36,7 @@ function extractContent(xml, feedIndex) {
         image: item.enclosure && item.enclosure[0].$.type.includes('image') ?
           item.enclosure[0].$.url :
           /<img/i.test(description) ?
-            /<img[^>]+src="?([^"\s]+)"?\s*\/>/i.exec(description)[1] :
+            /<img.+?src=[\"'](.+?)[\"']/i.exec(description)[1] :
             undefined,
         feed: feedIndex,
       }
