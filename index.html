@@ -42,6 +42,10 @@
     padding: 2em;
   }
 
+  h1 {
+    cursor: pointer;
+  }
+
   .menu__feed {
     margin: 0 0 1.5em;
     white-space: nowrap;
@@ -74,6 +78,10 @@
 
   .card__description {
     line-height: 1.7em;
+  }
+
+  .card__description::after {
+    content: ' ↬';
   }
 
   .feed__icon {
@@ -232,7 +240,7 @@ function Item({ link, title, feed, date, image, description }) {
 
 const slideout = new Slideout({ panel, menu, padding: 256, tolerance: 70 });
 
-menu.insertAdjacentHTML('beforeEnd', Object.keys(feedList).map(name => (`
+menu.insertAdjacentHTML('beforeEnd', Object.keys(feedList).sort().map(name => (`
   <div class="menu__feed">
     ${Feed({ name, ...feedList[name] })}
   </div>
