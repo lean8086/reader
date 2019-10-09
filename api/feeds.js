@@ -21,6 +21,20 @@ function formatDescription(description) {
     .substring(0, 256);
 }
 
+function extractImage(item, description) {
+  // 1. <enclosure>
+  return item.enclosure && item.enclosure[0].$.type.includes('image') ?
+    item.enclosure[0].$.url :
+    // 2. <media:content>
+    item['media:content'] && item['media:content'][0].$.type.includes('image') ?
+      item['media:content'][0].$.url :
+      // 3. <description>...<img src="...">
+      /<img/i.test(description) ?
+        /<img.+?src=[\"'](.+?)[\"']/i.exec(description)[1] :
+        // 4. No image at all
+        undefined;
+}
+
 function extractContent(xml, feedIndex) {
   // TODO: lastBuildDate = xml.rss ? xml.rss.channel[0].lastBuildDate[0] : xml.feed.updated[0];
   const items = xml.rss ? xml.rss.channel[0].item : xml.feed.entry;
@@ -33,11 +47,7 @@ function extractContent(xml, feedIndex) {
         link: item.link[0].$ ? item.link[0].$.href : item.link[0],
         date: item.pubDate ? item.pubDate[0] : item.published[0] ? item.published[0] : item.published,
         description: formatDescription(description),
-        image: item.enclosure && item.enclosure[0].$.type.includes('image') ?
-          item.enclosure[0].$.url :
-          /<img/i.test(description) ?
-            /<img.+?src=[\"'](.+?)[\"']/i.exec(description)[1] :
-            undefined,
+        image: extractImage(item, description),
         feed: feedIndex,
       }
     ];
