@@ -80,10 +80,6 @@
     line-height: 1.7em;
   }
 
-  .card__description::after {
-    content: ' ↬';
-  }
-
   .feed__icon {
     width: 16px;
     height: 16px;
@@ -196,7 +192,7 @@ function fetchAndRender(config = {}) {
   fetch(`/api/feeds?offset=${config.feed ? 99 : 25}&page=${page}${config.feed ? `&feed=${config.feed}` : ''}`)
     .then(res => res.json())
     .then(items => items.map(Item).join(''))
-    .then(content => panel.innerHTML = `${content}${config.feed ? More() : ''}`);
+    .then(content => panel.innerHTML = `${content}${!config.feed ? More() : ''}`);
 }
 fetchAndRender();
 

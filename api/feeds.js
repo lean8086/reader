@@ -5,6 +5,7 @@ import { parseStringPromise } from 'xml2js';
 const blacklist = new RegExp([
   'Read more...',
   'Continue reading&hellip;',
+  'Â'
 ].join('|'));
 
 function formatDescription(description) {
@@ -14,9 +15,9 @@ function formatDescription(description) {
     // Avoid bad patterns
     .replace(blacklist, '')
     // Normalize whitespaces
-    .replace(/\s\s+/g, ' ')
+    .replace(/(\s\s+)|&nbsp;/g, ' ')
     // Keep the first sentence
-    .split('. ')[0]
+    .split('. ')[0].concat('.')
     // Trim ;)
     .trim();
 }
