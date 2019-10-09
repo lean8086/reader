@@ -105,6 +105,28 @@
     color: var(--color-background);
   }
 
+  .btn--menu {
+    --size: 55px;
+    background: var(--color-text);
+    color: var(--color-background);
+    font-size: 1.5em;
+    position: fixed;
+    bottom: var(--size);
+    right: 2rem;
+    width: var(--size);
+    height: var(--size);
+    z-index: 99;
+    border: none;
+    border-radius: 100%;
+    line-height: 1em;
+    cursor: pointer;
+  }
+
+  .btn--more:hover {
+    background: var(--color-text);
+    color: var(--color-background);
+  }
+
   .slideout-menu {
     position: fixed;
     top: 0;
@@ -177,8 +199,9 @@
   }
 </style>
 
-<div class="menu"><h1>↺</h1></div>
+<nav class="menu"><h1>&#8635;</h1></nav>
 <main class="panel"></main>
+<button class="btn btn--menu">&#9776;</button>
 
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
 <script type="module">
@@ -239,7 +262,8 @@ function Item({ link, title, feed, date, image, description }) {
 
 // MENU //////////////////////////////////////////
 
-const slideout = new Slideout({ panel, menu, padding: 256, tolerance: 70 });
+const slideout = new Slideout({ panel, menu, padding: 256, tolerance: 70, touch: false });
+document.querySelector('.btn--menu').addEventListener('click', () => slideout.toggle());
 
 menu.insertAdjacentHTML('beforeEnd', Object.keys(feedList).sort().map(name => (`
   <div class="menu__feed">
