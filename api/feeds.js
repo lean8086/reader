@@ -33,12 +33,12 @@ function extractImage(item, description) {
   return item.enclosure && item.enclosure[0].$.type && item.enclosure[0].$.type.includes('image') ?
     item.enclosure[0].$.url :
     // 2. <media:thumbnail>
-    item['media:thumbnail'] && item['media:thumbnail'][0].$.url ?
+    item['media:thumbnail'] ?
       item['media:thumbnail'][0].$.url :
       // 3. <media:content>
       item['media:content'] && item['media:content'][0].$.type && item['media:content'][0].$.type.includes('image') ?
         item['media:content'][0].$.url :
-        // 4 <content:encoded>
+        // 4 <content:encoded>...<img src="...">
         item['content:encoded'] && /<img/i.test(item['content:encoded']) ?
           extractSrc(item['content:encoded']) :
           // 5. <description>...<img src="...">
