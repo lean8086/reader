@@ -15,10 +15,10 @@ function formatDescription(description) {
     .replace(blacklist, '')
     // Normalize whitespaces
     .replace(/\s\s+/g, ' ')
+    // Keep the first sentence
+    .split('. ')[0]
     // Trim ;)
-    .trim()
-    // Cut
-    .substring(0, 256);
+    .trim();
 }
 
 function extractImage(item, description) {
