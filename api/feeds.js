@@ -17,23 +17,35 @@ function formatDescription(description) {
     // Normalize whitespaces
     .replace(/(\s\s+)|&nbsp;/g, ' ')
     // Keep the first sentence
-    .split('. ')[0].concat('.')
+    .split('. ')[0]
     // Trim ;)
     .trim();
 }
 
+function extractSrc(str) {
+  const src = /<img.+?src=[\"'](.+?)[\"']/i.exec(str)[1];
+  // Avoid to get not desired images from special tags
+  return src && !/feedburner|.svg|images\/logo/ig.test(src) ? src : undefined;
+}
+
 function extractImage(item, description) {
   // 1. <enclosure>
-  return item.enclosure && item.enclosure[0].$.type.includes('image') ?
+  return item.enclosure && item.enclosure[0].$.type && item.enclosure[0].$.type.includes('image') ?
     item.enclosure[0].$.url :
-    // 2. <media:content>
-    item['media:content'] && item['media:content'][0].$.type.includes('image') ?
-      item['media:content'][0].$.url :
-      // 3. <description>...<img src="...">
-      /<img/i.test(description) ?
-        /<img.+?src=[\"'](.+?)[\"']/i.exec(description)[1] :
-        // 4. No image at all
-        undefined;
+    // 2. <media:thumbnail>
+    item['media:thumbnail'] && item['media:thumbnail'][0].$.url ?
+      item['media:thumbnail'][0].$.url :
+      // 3. <media:content>
+      item['media:content'] && item['media:content'][0].$.type && item['media:content'][0].$.type.includes('image') ?
+        item['media:content'][0].$.url :
+        // 4 <content:encoded>
+        item['content:encoded'] && /<img/i.test(item['content:encoded']) ?
+          extractSrc(item['content:encoded']) :
+          // 5. <description>...<img src="...">
+          /<img/i.test(description) ?
+            extractSrc(description) :
+            // 6. No image at all
+            undefined;
 }
 
 function extractContent(xml, feedIndex) {
@@ -46,7 +58,7 @@ function extractContent(xml, feedIndex) {
       {
         title: item.title[0],
         link: item.link[0].$ ? item.link[0].$.href : item.link[0],
-        date: item.pubDate ? item.pubDate[0] : item.published[0] ? item.published[0] : item.published,
+        date: item.pubDate ? item.pubDate[0] : item.published ? item.published[0] || item.published : undefined,
         description: formatDescription(description),
         image: extractImage(item, description),
         feed: feedIndex,
