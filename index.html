@@ -228,7 +228,7 @@ function Item({ link, title, feed, date, image, description }) {
       </h3>
       ${image ? `
         <a href=${link} target="_blank">
-          <img class="card__image" src="${image}"/>
+          <img class="card__image" src="${image}" loading="lazy"/>
         </a>` : ''
       }
       <p class="card__description">${description}</p>
