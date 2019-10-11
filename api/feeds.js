@@ -2,24 +2,31 @@ import feedList from '../feedList';
 import fetch from 'node-fetch';
 import { parseStringPromise } from 'xml2js';
 
-const blacklist = new RegExp([
-  'Read more...',
-  'Continue reading&hellip;',
-  'Â'
-].join('|'));
-
 function formatDescription(description) {
-  return description
+  const sanitized = description
     // Strip HTML
     .replace(/(<([^>]+)>)/ig, '')
     // Avoid bad patterns
-    .replace(blacklist, '')
+    .replace(new RegExp([
+      'Read more...',
+      'Continue reading&hellip;', // Polygon
+      'Â'
+    ].join('|')), '')
     // Normalize whitespaces
     .replace(/(\s\s+)|&nbsp;/g, ' ')
-    // Keep the first sentence
-    .split('. ')[0]
-    // Trim ;)
-    .trim();
+    .trim()
+    .substr(0, 480);
+
+  const short = sanitized.substr(0, 160);
+
+  // Cut the length based on the last dot of the short description
+  return short.lastIndexOf('.') > 0 ?
+    short.substr(0, short.lastIndexOf('.') + 1) :
+    // or cut on the last dot of the long description
+    sanitized.lastIndexOf('.') > 0 ?
+      sanitized.substr(0, sanitized.lastIndexOf('.') + 1) :
+      // or default
+      sanitized;
 }
 
 function extractSrc(str) {
