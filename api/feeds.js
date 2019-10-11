@@ -1,4 +1,4 @@
-import feedList from '../feedList';
+import { feedList } from '../feeds';
 import fetch from 'node-fetch';
 import { parseStringPromise } from 'xml2js';
 
@@ -108,7 +108,7 @@ function fetchById(ids) {
         return fetch(feed)
           .then(res => res.text())
           .then(body => parseStringPromise(body))
-          .then(xml => extractContent(xml, feedIndex))
+          .then(xml => extractContent(xml, indexes[feedIndex]))
           .catch(() => {});
       })
   );

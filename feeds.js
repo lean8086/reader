@@ -1,4 +1,4 @@
-export default {
+export const feedList = {
   // TECH
   'The Next Web': { domain: 'https://thenextweb.com', feed: 'https://feeds2.feedburner.com/thenextweb' },
   'Teslarati': { domain: 'https://teslarati.com', feed: 'https://www.teslarati.com/feed/', altFavicon: 'https://www.teslarati.com/wp-content/uploads/2015/10/cropped-Teslarati-iOS-White-Leaf-Icon-512x512-32x32.png' },
@@ -29,4 +29,18 @@ export default {
   'CSS-Tricks': { domain: 'https://css-tricks.com', feed: 'http://feeds.feedburner.com/CssTricks' },
   'DEV Community': { domain: 'https://dev.to', feed: 'https://dev.to/feed' },
 };
-// console.log(`'${document.title}': { domain: '${location.origin}', feed: '${document.head.querySelector('[type="application/rss+xml"]').href}' },`)
+
+export const feedCategs = {
+  '🚀Technology': {
+    feeds: '0,1,2,3,4,5,6,7,8,9',
+  },
+  '🕹Gaming': {
+    feeds: '10,11,12,13,14,15',
+  },
+  '🛠Makers': {
+    feeds: '16,17,18,19,20,21',
+  },
+  '🖥Coding': {
+    feeds: '22,23,24',
+  },
+};
