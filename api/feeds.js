@@ -10,8 +10,8 @@ function formatDescription(description) {
     .replace(new RegExp([
       'Read more...',
       'Continue reading&hellip;', // Polygon
-      'Â'
-    ].join('|')), '')
+      'Â',
+    ].join('|'), 'ig'), '')
     // Normalize whitespaces
     .replace(/(\s\s+)|&nbsp;/g, ' ')
     .trim()
@@ -32,7 +32,11 @@ function formatDescription(description) {
 function extractSrc(str) {
   const src = /<img.+?src=[\"'](.+?)[\"']/i.exec(str)[1];
   // Avoid to get not desired images from special tags
-  return src && !/feedburner|.svg|images\/logo/ig.test(src) ? src : undefined;
+  return src && !new RegExp([
+    'feedburner',
+    '.svg',
+    'images\/logo',
+  ].join('|', 'ig')).test(src) ? src : undefined;
 }
 
 function extractImage(item, description) {
@@ -74,7 +78,7 @@ function extractContent(xml, feedIndex) {
   }, []);
 }
 
-function fetchOne(feedName) {
+function fetchByFeed(feedName) {
   const feedIndex = Object.keys(feedList).indexOf(feedName);
   return fetch(feedList[feedName].feed)
     .then(res => res.text())
@@ -95,14 +99,25 @@ function fetchAll() {
   );
 }
 
+function fetchById(ids) {
+  const indexes = ids.split(',');
+  return Promise.all(
+    Object.values(feedList)
+      .filter((x, i) => indexes.includes(i.toString()))
+      .map(({ feed }, feedIndex) => {
+        return fetch(feed)
+          .then(res => res.text())
+          .then(body => parseStringPromise(body))
+          .then(xml => extractContent(xml, feedIndex))
+          .catch(() => {});
+      })
+  );
+}
+
 module.exports = async (req, res) => {
-  const {
-    offset = 10,
-    page = 1,
-    feed,
-  } = req.query;
-  const fetchItems = feed ? fetchOne : fetchAll;
-  let items = await fetchItems(feed);
+  const { offset = 10, page = 1, feed, ids } = req.query;
+  // Get by feed / ids / all
+  let items = feed ? await fetchByFeed(feed) : ids ? await fetchById(ids) : await fetchAll();
   // Flat merge all the results
   items = [].concat.apply([], items);
   // Sort by date
