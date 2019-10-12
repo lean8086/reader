@@ -46,15 +46,13 @@
     cursor: pointer;
   }
 
-  .menu__feed {
+  .categ__feed {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-
-  .menu__feed .feed {
     padding: .75em 0;
-    display: block;
+    display: none;
+    padding-left: 1em;
   }
 
   .card {
@@ -96,12 +94,7 @@
     padding: .75em 0;
   }
 
-  .categ__feeds {
-    display: none;
-    padding-left: 1em;
-  }
-
-  .categ__input:checked ~ .categ__feeds {
+  .categ__input:checked ~ .categ__feed {
     display: block;
   }
 
@@ -291,17 +284,16 @@ function Categ({ name }) {
     <section class="categ">
       <input class="categ__input" type="checkbox" id="${name}" hidden/>
       <label class="categ__button" for="${name}">${name}</label>
-      <div class="categ__feeds">
-        ${Object.keys(feedList)
-          .filter((x, i) => feedCategs[name].feeds.includes(i))
-          .sort()
-          .map(feedName => `
-            <div class="menu__feed">
-              ${Feed({ name: feedName, ...feedList[feedName] })}
-            </div>
-          `).join('')
-        }
-      </div>
+      ${Object.keys(feedList)
+        .filter((x, i) => feedCategs[name].feeds.includes(i))
+        .sort()
+        .map(feedName => Feed({
+          className: 'categ__feed',
+          name: feedName,
+          ...feedList[feedName],
+        }))
+        .join('')
+      }
     </section>
   `;
 }
@@ -333,9 +325,9 @@ document.body.addEventListener('click', (ev) => {
   }
 });
 
-function Feed({ domain, altFavicon, name }) {
+function Feed({ domain, altFavicon, name, className }) {
   return `
-    <a class="feed" href=${domain} target="_blank">
+    <a class="feed${className ? ` ${className}` : ''}" href=${domain} target="_blank">
       <img
         src="${!altFavicon ? `${domain}/favicon.ico` : altFavicon}"
         class="feed__icon"
