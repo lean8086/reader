@@ -6,8 +6,8 @@
   @import url('https://rsms.me/inter/inter.css');
 
   :root {
-    --color-background: #010101;
-    --color-text: #fff;
+    --color-background: #1c1c1c;
+    --color-text: #eee;
   }
 
   * {
@@ -90,12 +90,25 @@
   }
 
   .categ__button {
-    display: block;
-    padding: .75em 0;
+    display: inline-block;
+    padding: 1em;
+    transition: all 200ms;
+    transform: translateX(-.5em);
+    font-size: .9em;
+  }
+
+  .categ__name {
+    display: inline-block;
+    margin: 0;
+    font-size: .9em;
   }
 
   .categ__input:checked ~ .categ__feed {
     display: block;
+  }
+
+  .categ__input:checked ~ .categ__button {
+    transform: translateX(-.5em) rotate(90deg);
   }
 
   .btn--more {
@@ -248,7 +261,7 @@ function formatDate(date) {
 }
 
 function More() {
-  return `<button class="btn btn--more">More</button>`;
+  return `<button class="btn btn--more" data-action="more">More</button>`;
 }
 
 function Item({ link, title, feed, date, image, description }) {
@@ -283,7 +296,11 @@ function Categ({ name }) {
   return `
     <section class="categ">
       <input class="categ__input" type="checkbox" id="${name}" hidden/>
-      <label class="categ__button" for="${name}">${name}</label>
+      <label class="categ__button" for="${name}">&#10095;</label>
+      <h3 class="categ__name">${name}</h3>
+      <a class="feed categ__feed" href="#" data-action="categ" data-categ="${name}">
+        All
+      </a>
       ${Object.keys(feedList)
         .filter((x, i) => feedCategs[name].feeds.includes(i))
         .sort()
@@ -308,26 +325,38 @@ document.querySelector('h1').addEventListener('click', () => {
 // FEEDS /////////////////////////////////////////
 
 document.body.addEventListener('click', (ev) => {
-  if (ev.target.classList.contains('feed')) {
-    ev.preventDefault();
-    slideout.close();
-    const feed = ev.target.textContent.trim();
-    fetchAndRender({ feed });
-  } else if (ev.target.classList.contains('btn--more')) {
-    page++;
-    fetchAndRender();
-  } else if (ev.target.classList.contains('categ__button')) {
-    const categName = ev.target.textContent.trim();
-    if (!document.getElementById(categName).checked) {
-      const ids = feedCategs[categName].feeds;
-      fetchAndRender({ ids });
-    }
+  const { dataset } = ev.target;
+  if (!dataset.action) { return; }
+  switch (dataset.action) {
+    case 'feed':
+      ev.preventDefault();
+      slideout.close();
+      fetchAndRender({ feed: dataset.feed });
+      break;
+    case 'categ':
+      ev.preventDefault();
+      slideout.close();
+      fetchAndRender({ ids: feedCategs[dataset.categ].feeds });
+      break;
+    case 'more':
+      page++;
+      fetchAndRender();
+      break;
+    default:
+      return;
+      break;
   }
 });
 
 function Feed({ domain, altFavicon, name, className }) {
   return `
-    <a class="feed${className ? ` ${className}` : ''}" href=${domain} target="_blank">
+    <a
+      href=${domain}
+      class="feed${className ? ` ${className}` : ''}"
+      target="_blank"
+      data-action="feed"
+      data-feed="${name}"
+    >
       <img
         src="${!altFavicon ? `${domain}/favicon.ico` : altFavicon}"
         class="feed__icon"
