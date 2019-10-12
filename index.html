@@ -3,11 +3,15 @@
 <title>🍌</title>
 <link rel="manifest" href="/manifest.json"/>
 <style>
+  /* General */
   @import url('https://rsms.me/inter/inter.css');
 
   :root {
-    --color-background: #1c1c1c;
-    --color-text: #eee;
+    --color-background-primary: #1c1c1c;
+    --color-background-secondary: #000;
+    --color-text-primary: rgba(255, 255, 255, .9);
+    --color-text-secondary: rgba(255, 255, 255, .6);
+    --gutter-primary: 2rem;
   }
 
   * {
@@ -15,8 +19,21 @@
   }
 
   ::selection {
-    background-color: var(--color-text);
-    color: var(--color-background);
+    background-color: var(--color-text-primary);
+    color: var(--color-background-primary);
+  }
+
+  body {
+    background: var(--color-background-primary);
+    font-family: 'Inter', sans-serif;
+    color: var(--color-text-primary);
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+
+  @supports (font-variation-settings: normal) {
+    body { font-family: 'Inter var', sans-serif; }
   }
 
   a {
@@ -24,48 +41,152 @@
     text-decoration: none;
   }
 
-  body {
-    background: var(--color-background);
-    font-family: 'Inter', sans-serif;
-    color: var(--color-text);
-    width: 100%;
-    height: 100%;
-    margin: 0;
-  }
-
-  .panel {
-    max-width: 50em;
-  }
-
-  .panel,
-  .menu {
-    padding: 2em;
-  }
-
-  h1 {
+  .btn {
+    border: none;
+    padding: 0;
+    background: none;
+    color: inherit;
     cursor: pointer;
   }
 
-  .categ__feed {
+  /* FEED MEDIA OBJECT */
+  .feed {
+    display: flex;
+    align-items: center;
+  }
+
+  .feed__icon {
+    width: 1rem;
+    height: 1rem;
+    border-radius: 1px;
+    margin-right: .35rem;
+    pointer-events: none;
+  }
+
+  .feed__name {
+    flex-grow: 1;
+    pointer-events: none;
+  }
+
+  /* MENU */
+  .menu {
+    width: 16rem;
+    position: fixed;
+    overflow-y: scroll;
+    padding: var(--gutter-primary);
+    font-size: .9em;
+    height: 100vh;
+    background: var(--color-background-primary);
+    z-index: 3;
+    display: none;
+  }
+
+  .menu__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .menu__logo {
+    margin: 0;
+    font-size: 1.2em;
+  }
+
+  .menu__title {
+    font-size: .8em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.5em;
+  }
+
+  .menu__text {
+    font-size: inherit;
+  }
+
+  .menu__options {
+    margin: var(--gutter-primary) 0;
+    display: block;
+  }
+
+  .feed--menu {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: .75em 0;
-    display: none;
+    padding: .6em 0;
     padding-left: 1em;
   }
 
+  .categ-header {
+    display: flex;
+    align-items: center;
+    transform: translateX(-.5em);
+  }
+
+  .categ-header__button {
+    font-size: .3rem;
+    padding: .6rem .4rem;
+    transition: all 200ms;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+  }
+
+  .categ-content {
+    max-height: 0;
+    transition: all 200ms;
+    overflow: hidden;
+  }
+
+  .categ__collapse:checked ~ .categ-content {
+    max-height: 100vh;
+  }
+  
+  .categ__collapse:checked ~ .categ-header .categ-header__button {
+    transform: rotate(90deg);
+  }
+
+  .categ-header__name {
+    flex-grow: 1;
+    margin: 0;
+  }
+
+  /* CONTENT */
+  .main {
+    padding: var(--gutter-primary);
+    padding-top: 3rem;
+    z-index: 1;
+  }
+
+  .main__header {
+    padding: .5em var(--gutter-primary);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--color-background-primary);
+    z-index: 2;
+  }
+
+  .open-menu,
+  .close-menu {
+    font-size: 1.2em;
+    cursor: pointer;
+  }
+
+  .menu-collapse:checked + .menu {
+    display: block;
+  }
+
   .card {
-    margin: 0 0 5em;
+    margin-bottom: 5rem;
   }
 
   .card__title {
-    font-size: 1.8em;
-    letter-spacing: -0.055em;
-    line-height: 0.9em;
+    font-size: 1.8rem;
+    letter-spacing: -0.05em;
     text-indent: -0.03em;
     font-weight: 700;
     line-height: 1.25em;
+    margin: 0;
   }
 
   .card__image {
@@ -75,7 +196,19 @@
   }
 
   .card__source {
+    display: flex;
+    align-items: center;
     font-weight: 350;
+    font-size: .95em;
+  }
+
+  .feed--card {
+    display: inline-flex;
+    margin-right: .5em;
+  }
+
+  .card__source time {
+    margin-left: .5em;
   }
 
   .card__description {
@@ -83,244 +216,94 @@
     overflow: hidden;
   }
 
-  .feed__icon {
-    width: 16px;
-    height: 16px;
-    border-radius: 2px;
-  }
+  /* BIG SCREENS */
+  @media (min-width: 48rem) {
+    .menu {
+      display: block;
+    }
 
-  .categ__button {
-    display: inline-block;
-    padding: 1em;
-    transition: all 200ms;
-    transform: translateX(-.5em);
-    font-size: .9em;
-  }
+    .main {
+      margin-left: 16rem;
+    }
 
-  .categ__name {
-    display: inline-block;
-    margin: 0;
-    font-size: .9em;
-  }
+    .main__header,
+    .open-menu,
+    .close-menu {
+      display: none;
+    }
 
-  .categ__input:checked ~ .categ__feed {
-    display: block;
-  }
-
-  .categ__input:checked ~ .categ__button {
-    transform: translateX(-.5em) rotate(90deg);
-  }
-
-  .btn--more {
-    border: 1px solid var(--color-text);
-    background: transparent;
-    color: var(--color-text);
-    font-size: 1.5em;
-    width: 100%;
-    padding: .5em 5em;
-    display: block;
-  }
-
-  .btn--more:hover {
-    background: var(--color-text);
-    color: var(--color-background);
-  }
-
-  .btn--menu {
-    --size: 55px;
-    background: var(--color-text);
-    color: var(--color-background);
-    font-size: 1.5em;
-    position: fixed;
-    bottom: var(--size);
-    right: 2rem;
-    width: var(--size);
-    height: var(--size);
-    z-index: 99;
-    border: none;
-    border-radius: 100%;
-    line-height: 1em;
-    cursor: pointer;
-  }
-
-  .btn--more:hover {
-    background: var(--color-text);
-    color: var(--color-background);
-  }
-
-  .slideout-menu {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    width: 256px;
-    min-height: 100vh;
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
-    z-index: 0;
-    display: none;
-  }
-
-  .slideout-menu-left {
-    left: 0;
-  }
-
-  .slideout-menu-right {
-    right: 0;
-  }
-
-  .slideout-panel {
-    position: relative;
-    z-index: 1;
-    will-change: transform;
-    background: var(--color-background);
-    min-height: 100vh;
-  }
-
-  .slideout-open,
-  .slideout-open body,
-  .slideout-open .slideout-panel {
-    overflow: hidden;
-  }
-
-  .slideout-open .slideout-menu {
-    display: block;
-  }
-
-  @media (min-width: 50em) {
-    .menu,
-    .panel {
-      padding: 3em;
+    .main__container {
+      max-width: 42rem;
+      margin: 0 auto;
     }
 
     .card__title {
-      font-size: 2em;
+      font-size: 2.2rem;
     }
-
-    .btn--more {
-      margin: 0 auto;
-      width: auto;
-      cursor: pointer;
-    }
-
-    .slideout-menu {
-      width: 20em;
-    }
-
-    .slideout-panel {
-      margin-left: 20em;
-    }
-
-    .slideout-menu {
-      display: block;
-    }
-  }
-
-  @supports (font-variation-settings: normal) {
-    body { font-family: 'Inter var', sans-serif; }
   }
 </style>
 
-<nav class="menu"><h1>&#8635;</h1></nav>
-<main class="panel"></main>
-<button class="btn btn--menu">&#9776;</button>
 
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
+
+<input class="menu-collapse" type="checkbox" id="menu-collapse" hidden/>
+<nav class="menu">
+  <header class="menu__header">
+    <h1 class="menu__logo">Reader</h1>
+    <label class="close-menu" for="menu-collapse">&#10799;</label>
+  </header>
+  <section class="menu__options">
+    <button class="btn menu__btn menu__text" data-action="all">All feeds</button>
+  </section>
+  <h2 class="menu__title">Feeds</h2>
+  <!-- Injected groups / feeds here -->
+</nav>
+<main class="main">
+  <header class="main__header">
+    <label class="open-menu" for="menu-collapse">&#9776;</label>
+  </header>
+  <div class="main__container"></div>
+</main>
+
+
+
 <script type="module">
+
 import { feedList, feedCategs } from './feeds.js';
 
+const menuCollapse = document.querySelector('#menu-collapse');
 const menu = document.querySelector('.menu');
-const panel = document.querySelector('.panel');
-
-// PANEL /////////////////////////////////////////
-
-let page = 1;
-const today = new Date();
-
-function fetchAndRender(config = {}) {
-  panel.innerHTML = '<h2 class="card__title">Loading...</h2>';
-  fetch([
-    '/api/feeds',
-    '?offset=25',
-    `&page=${page}`,
-    config.feed ? `&feed=${config.feed}` : '',
-    config.ids ? `&ids=${config.ids}` : '',
-  ].join(''))
-    .then(res => res.json())
-    .then(items => items.map(Item).join(''))
-    .then(content => panel.innerHTML = `${content}${!config.feeds && !config.ids ? More() : ''}`);
-}
-fetchAndRender();
-
-function formatDate(date) {
-  const d = new Date(date);
-  const isFromToday = d.getDay() === today.getDay();
-  return d.toLocaleTimeString([], {
-    dateStyle: !isFromToday ? 'medium' : undefined,
-    timeStyle: isFromToday ? 'short' : undefined,
-  });
-}
-
-function More() {
-  return `<button class="btn btn--more" data-action="more">More</button>`;
-}
-
-function Item({ link, title, feed, date, image, description }) {
-  return `
-    <article class="card">
-      <h2 class="card__title">
-        <a class="card__link" href=${link} target="_blank">${title}</a>
-      </h2>
-      <h3 class="card__source">
-        ${Feed({
-          name: Object.keys(feedList)[feed],
-          ...Object.values(feedList)[feed]
-        })}
-        &middot; <time>${formatDate(date)}</time>
-      </h3>
-      ${image ? `
-        <a href=${link} target="_blank">
-          <img class="card__image" src="${image}" loading="lazy"/>
-        </a>` : ''
-      }
-      <p class="card__description">${description}</p>
-    </article>
-  `;
-}
+const container = document.querySelector('.main__container');
 
 // MENU //////////////////////////////////////////
 
-const slideout = new Slideout({ panel, menu, padding: 256, tolerance: 70, touch: false });
-document.querySelector('.btn--menu').addEventListener('click', () => slideout.toggle());
+menu.insertAdjacentHTML('beforeEnd', Object.keys(feedCategs).map(name => Categ({ name })).join(''));
 
 function Categ({ name }) {
   return `
     <section class="categ">
-      <input class="categ__input" type="checkbox" id="${name}" hidden/>
-      <label class="categ__button" for="${name}">&#10095;</label>
-      <h3 class="categ__name">${name}</h3>
-      <a class="feed categ__feed" href="#" data-action="categ" data-categ="${name}">
-        All
-      </a>
-      ${Object.keys(feedList)
-        .filter((x, i) => feedCategs[name].feeds.includes(i))
-        .sort()
-        .map(feedName => Feed({
-          className: 'categ__feed',
-          name: feedName,
-          ...feedList[feedName],
-        }))
-        .join('')
-      }
+      <input class="categ__collapse" type="checkbox" id="${name}" hidden/>
+      <div class="categ-header">
+        <label class="categ-header__button" for="${name}">&#9654;</label>
+        <h3 class="categ-header__name menu__text">${name}</h3>
+      </div>
+      <div class="categ-content">
+        <a class="feed feed--menu menu__text" href="#" data-action="categ" data-categ="${name}">
+          All updates
+        </a>
+        ${Object.keys(feedList)
+          .filter((x, i) => feedCategs[name].feeds.includes(i))
+          .sort()
+          .map(feedName => Feed({
+            className: 'feed--menu menu__text',
+            name: feedName,
+            ...feedList[feedName],
+          }))
+          .join('')
+        }
+      </div>
     </section>
   `;
 }
-
-menu.insertAdjacentHTML('beforeEnd', Object.keys(feedCategs).map(name => Categ({ name })).join(''));
-
-document.querySelector('h1').addEventListener('click', () => {
-  slideout.close();
-  fetchAndRender();
-});
 
 // FEEDS /////////////////////////////////////////
 
@@ -330,16 +313,17 @@ document.body.addEventListener('click', (ev) => {
   switch (dataset.action) {
     case 'feed':
       ev.preventDefault();
-      slideout.close();
       fetchAndRender({ feed: dataset.feed });
       break;
     case 'categ':
       ev.preventDefault();
-      slideout.close();
       fetchAndRender({ ids: feedCategs[dataset.categ].feeds });
       break;
     case 'more':
       page++;
+      fetchAndRender();
+      break;
+    case 'all':
       fetchAndRender();
       break;
     default:
@@ -360,10 +344,68 @@ function Feed({ domain, altFavicon, name, className }) {
       <img
         src="${!altFavicon ? `${domain}/favicon.ico` : altFavicon}"
         class="feed__icon"
-        loading="lazy"
       />
-      ${name}
+      <span class="feed__name">${name}</span>
     </a>
+  `;
+}
+
+// CONTAINER /////////////////////////////////////////
+
+let page = 1;
+const today = new Date();
+
+function fetchAndRender(config = {}) {
+  menuCollapse.checked = false;
+  container.innerHTML = '<h2 class="card__title">Loading...</h2>';
+  fetch([
+    '/api/feeds',
+    '?offset=25',
+    `&page=${page}`,
+    config.feed ? `&feed=${config.feed}` : '',
+    config.ids ? `&ids=${config.ids}` : '',
+  ].join(''))
+    .then(res => res.json())
+    .then(items => items.map(Card).join(''))
+    .then(content => container.innerHTML = `${content}${!config.feeds && !config.ids ? More() : ''}`);
+}
+fetchAndRender();
+
+function formatDate(date) {
+  const d = new Date(date);
+  const isFromToday = d.getDay() === today.getDay();
+  return d.toLocaleTimeString([], {
+    dateStyle: !isFromToday ? 'medium' : undefined,
+    timeStyle: isFromToday ? 'short' : undefined,
+  });
+}
+
+function More() {
+  return `<button class="btn btn--more" data-action="more">More</button>`;
+}
+
+function Card({ link, title, feed, date, image, description }) {
+  return `
+    <article class="card">
+      <h2 class="card__title">
+        <a class="card__link" href=${link} target="_blank">${title}</a>
+      </h2>
+      <h3 class="card__source">
+        ${Feed({
+          name: Object.keys(feedList)[feed],
+          className: 'feed--card',
+          ...Object.values(feedList)[feed]
+        })}
+        <span>&middot;</span>
+        <time>${formatDate(date)}</time>
+      </h3>
+      ${image ? `
+        <a href=${link} target="_blank">
+          <img class="card__image" src="${image}" loading="lazy"/>
+        </a>` : ''
+      }
+      <p class="card__description">${description}</p>
+    </article>
   `;
 }
 
