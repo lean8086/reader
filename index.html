@@ -8,7 +8,7 @@
 
   :root {
     --color-background-primary: #1c1c1c;
-    --color-background-secondary: #000;
+    --color-background-secondary: #111;
     --color-text-primary: rgba(255, 255, 255, .9);
     --color-text-secondary: rgba(255, 255, 255, .6);
     --gutter-primary: 2rem;
@@ -74,9 +74,8 @@
     position: fixed;
     overflow-y: scroll;
     padding: var(--gutter-primary);
-    font-size: .9em;
     height: 100vh;
-    background: var(--color-background-primary);
+    background: var(--color-background-secondary);
     z-index: 3;
     display: none;
   }
@@ -157,12 +156,11 @@
   }
 
   .main__header {
-    padding: .5em var(--gutter-primary);
+    padding: 1em var(--gutter-primary);
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    background: var(--color-background-primary);
     z-index: 2;
   }
 
@@ -220,6 +218,7 @@
   @media (min-width: 48rem) {
     .menu {
       display: block;
+      font-size: .9em;
     }
 
     .main {
