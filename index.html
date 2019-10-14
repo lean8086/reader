@@ -11,6 +11,9 @@
     --color-background-secondary: #111;
     --color-text-primary: rgba(255, 255, 255, .9);
     --color-text-secondary: rgba(255, 255, 255, .6);
+    --color-highlight-c: #72bfe9;
+    --color-highlight-m: #ce9ece;
+    --color-highlight-y: #fecb32;
     --gutter-primary: 2rem;
   }
 
@@ -78,12 +81,7 @@
     background: var(--color-background-secondary);
     z-index: 3;
     display: none;
-  }
-
-  .menu__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    position: relative;
   }
 
   .menu__logo {
@@ -155,19 +153,51 @@
     z-index: 1;
   }
 
+  .main__container {
+    margin-top: 1rem;
+  }
+
   .main__header {
-    padding: 1em var(--gutter-primary);
+    padding: 0 var(--gutter-primary);
+    height: 4rem;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     z-index: 2;
+    background-image: linear-gradient(to bottom, var(--color-background-secondary), transparent);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
   }
 
   .open-menu,
   .close-menu {
-    font-size: 1.2em;
+    font-size: 1.5em;
+    width: 4rem;
+    height: 4rem;
+    text-align: center;
+    line-height: 4rem;
     cursor: pointer;
+  }
+
+  .open-menu {
+    transform: translateX(-1em);
+  }
+
+  .close-menu {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .btn--more {
+    border: 1px solid var(--color-highlight-m);
+    padding: .5em 1em;
+    border-radius: 1.25em;
+    font-size: 1em;
+    color: var(--color-highlight-m);
   }
 
   .menu-collapse:checked + .menu {
@@ -202,11 +232,11 @@
 
   .feed--card {
     display: inline-flex;
-    margin-right: .4em;
+    margin-right: .3em;
   }
 
   .card__source time {
-    margin-left: .4em;
+    margin-left: .3em;
   }
 
   .card__description {
@@ -223,6 +253,10 @@
 
     .main {
       margin-left: 16rem;
+    }
+
+    .main__container {
+      margin-top: 0;
     }
 
     .main__header,
@@ -246,10 +280,8 @@
 
 <input class="menu-collapse" type="checkbox" id="menu-collapse" hidden/>
 <nav class="menu">
-  <header class="menu__header">
-    <h1 class="menu__logo">Reader</h1>
-    <label class="close-menu" for="menu-collapse">&#10799;</label>
-  </header>
+  <h1 class="menu__logo">Reader</h1>
+  <label class="close-menu" for="menu-collapse">&#10799;</label>
   <section class="menu__options">
     <button class="btn menu__btn menu__text" data-action="all">All feeds</button>
   </section>
@@ -381,7 +413,7 @@ function formatDate(date) {
 }
 
 function More() {
-  return `<button class="btn btn--more" data-action="more">More</button>`;
+  return `<button class="btn btn--more" data-action="more">Load more</button>`;
 }
 
 function Card({ link, title, feed, date, image, description }) {
