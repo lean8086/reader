@@ -359,10 +359,9 @@ function fetchAndRender(config = {}) {
   container.innerHTML = '<h2 class="card__title">Loading...</h2>';
   fetch([
     '/api/feeds',
-    '?offset=25',
-    `&page=${page}`,
-    config.feed ? `&feed=${config.feed}` : '',
-    config.ids ? `&ids=${config.ids}` : '',
+    !config.feed && !config.ids ? `?offset=25&page=${page}` : '',
+    config.feed ? `?feed=${config.feed}` : '',
+    config.ids ? `?ids=${config.ids}` : '',
   ].join(''))
     .then(res => res.json())
     .then(items => items.map(Card).join(''))

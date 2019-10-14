@@ -115,7 +115,7 @@ function fetchById(ids) {
 }
 
 module.exports = async (req, res) => {
-  const { offset = 10, page = 1, feed, ids } = req.query;
+  const { offset, page, feed, ids } = req.query;
   // Get by feed / ids / all
   let items = feed ? await fetchByFeed(feed) : ids ? await fetchById(ids) : await fetchAll();
   // Flat merge all the results
@@ -123,6 +123,8 @@ module.exports = async (req, res) => {
   // Sort by date
   items = items.sort((a, b) => new Date(b.date) - new Date(a.date));
   // Paginate
-  items = items.slice(offset * (page - 1), offset * page);
+  if (offset && page) {
+    items = items.slice(offset * (page - 1), offset * page);
+  }
   res.send(items);
 };
