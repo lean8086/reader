@@ -202,11 +202,11 @@
 
   .feed--card {
     display: inline-flex;
-    margin-right: .5em;
+    margin-right: .4em;
   }
 
   .card__source time {
-    margin-left: .5em;
+    margin-left: .4em;
   }
 
   .card__description {
@@ -370,13 +370,15 @@ function fetchAndRender(config = {}) {
 }
 fetchAndRender();
 
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dev'];
 function formatDate(date) {
   const d = new Date(date);
+  const ampm = d.getHours() >= 12 ? 'pm' : 'am';
+  const h = d.getHours() % 12 || 12;
+  const m = `0${d.getMinutes()}`.slice(-2);
+  const time = `${h}:${m} ${ampm}`;
   const isFromToday = d.getDay() === today.getDay();
-  return d.toLocaleTimeString([], {
-    dateStyle: !isFromToday ? 'medium' : undefined,
-    timeStyle: isFromToday ? 'short' : undefined,
-  });
+  return isFromToday ? time : `${months[d.getMonth()]} ${d.getDate()}, ${time}`;
 }
 
 function More() {
