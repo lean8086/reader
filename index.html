@@ -307,30 +307,28 @@ const container = document.querySelector('.main__container');
 
 // MENU //////////////////////////////////////////
 
+const feedListKeys = Object.keys(feedList);
+const feedListValues = Object.values(feedList);
+
 menu.insertAdjacentHTML('beforeEnd', Object.keys(feedCategs).map(name => Categ({ name })).join(''));
 
 function Categ({ name }) {
   return `
     <section class="categ">
       <input class="categ__collapse" type="checkbox" id="${name}" hidden/>
-      <div class="categ-header">
-        <label class="categ-header__button" for="${name}">&#9654;</label>
+      <label class="categ-header" for="${name}">
+        <span class="categ-header__button">&#9654;</span>
         <h3 class="categ-header__name menu__text">${name}</h3>
-      </div>
+      </label>
       <div class="categ-content">
         <a class="feed feed--menu menu__text" href="#" data-action="categ" data-categ="${name}">
           All updates
         </a>
-        ${Object.keys(feedList)
-          .filter((x, i) => feedCategs[name].feeds.includes(i))
-          .sort()
-          .map(feedName => Feed({
-            className: 'feed--menu menu__text',
-            name: feedName,
-            ...feedList[feedName],
-          }))
-          .join('')
-        }
+        ${feedCategs[name].feeds.split(',').map(feedIndex => Feed({
+          className: 'feed--menu menu__text',
+          name: feedListKeys[feedIndex],
+          ...feedListValues[feedIndex],
+        })).join('')}
       </div>
     </section>
   `;
