@@ -81,7 +81,6 @@
     background: var(--color-background-secondary);
     z-index: 3;
     display: none;
-    position: relative;
   }
 
   .menu__logo {
@@ -226,7 +225,7 @@
   .card__source {
     display: flex;
     align-items: center;
-    font-weight: 350;
+    font-weight: 550;
     font-size: .95em;
   }
 
@@ -404,7 +403,7 @@ fetchAndRender();
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dev'];
 function formatDate(date) {
   const d = new Date(date);
-  const ampm = d.getHours() >= 12 ? 'pm' : 'am';
+  const ampm = d.getHours() >= 12 ? 'PM' : 'AM';
   const h = d.getHours() % 12 || 12;
   const m = `0${d.getMinutes()}`.slice(-2);
   const time = `${h}:${m} ${ampm}`;

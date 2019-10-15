@@ -78,23 +78,23 @@ function extractContent(xml, feedIndex) {
   }, []);
 }
 
-function fetchByFeed(feedName) {
-  const feedIndex = Object.keys(feedList).indexOf(feedName);
-  return fetch(feedList[feedName].feed)
+function f(url, feedIndex) {
+  return fetch(url)
     .then(res => res.text())
     .then(body => parseStringPromise(body))
     .then(xml => extractContent(xml, feedIndex))
     .catch(() => {});
 }
 
+function fetchByFeed(feedName) {
+  const feedIndex = Object.keys(feedList).indexOf(feedName);
+  return f(feedList[feedName].feed, feedIndex);
+}
+
 function fetchAll() {
   return Promise.all(
     Object.values(feedList).map(({ feed }, feedIndex) => {
-      return fetch(feed)
-        .then(res => res.text())
-        .then(body => parseStringPromise(body))
-        .then(xml => extractContent(xml, feedIndex))
-        .catch(() => {});
+      return f(feed, feedIndex);
     })
   );
 }
@@ -105,17 +105,13 @@ function fetchById(ids) {
     Object.values(feedList)
       .filter((x, i) => indexes.includes(i.toString()))
       .map(({ feed }, feedIndex) => {
-        return fetch(feed)
-          .then(res => res.text())
-          .then(body => parseStringPromise(body))
-          .then(xml => extractContent(xml, indexes[feedIndex]))
-          .catch(() => {});
+        return f(feed, indexes[feedIndex]);
       })
   );
 }
 
 module.exports = async (req, res) => {
-  const { offset, page, feed, ids } = req.query;
+  const { offset, page = 1, feed, ids } = req.query;
   // Get by feed / ids / all
   let items = feed ? await fetchByFeed(feed) : ids ? await fetchById(ids) : await fetchAll();
   // Flat merge all the results
@@ -123,7 +119,7 @@ module.exports = async (req, res) => {
   // Sort by date
   items = items.sort((a, b) => new Date(b.date) - new Date(a.date));
   // Paginate
-  if (offset && page) {
+  if (offset) {
     items = items.slice(offset * (page - 1), offset * page);
   }
   res.send(items);
