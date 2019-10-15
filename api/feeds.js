@@ -75,6 +75,7 @@ function extractContent(xml, feedIndex) {
       ...acc,
       {
         title: item.title[0],
+        author: item.author ? item.author.map(a => a.name || a).join(', ') : item['dc:creator'] ? item['dc:creator'].join(', ') : undefined,
         link: item.link[0].$ ? item.link[0].$.href : item.link[0],
         date: item.pubDate ? item.pubDate[0] : item.published ? item.published[0] || item.published : undefined,
         description: formatDescription(description),
