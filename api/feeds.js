@@ -39,6 +39,13 @@ function extractSrc(str) {
   ].join('|', 'ig')).test(src) ? src : undefined;
 }
 
+function extractVideo(item) {
+  // 1. <enclosure>
+  return item.enclosure && item.enclosure[0].$.type && item.enclosure[0].$.type.includes('video') ?
+    { url: item.enclosure[0].$.url, type: item.enclosure[0].$.type } :
+    undefined;
+}
+
 function extractImage(item, description) {
   // 1. <enclosure>
   return item.enclosure && item.enclosure[0].$.type && item.enclosure[0].$.type.includes('image') ?
@@ -72,6 +79,7 @@ function extractContent(xml, feedIndex) {
         date: item.pubDate ? item.pubDate[0] : item.published ? item.published[0] || item.published : undefined,
         description: formatDescription(description),
         image: extractImage(item, description),
+        video: extractVideo(item),
         feed: feedIndex,
       }
     ];

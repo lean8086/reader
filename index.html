@@ -216,7 +216,8 @@
     margin: 0;
   }
 
-  .card__image {
+  .card__image,
+  .card__video {
     width: 100%;
     border-radius: .5em;
     filter: saturate(75%);
@@ -415,7 +416,7 @@ function More() {
   return `<button class="btn btn--more" data-action="more">Load more</button>`;
 }
 
-function Card({ link, title, feed, date, image, description }) {
+function Card({ link, title, feed, date, image, video, description }) {
   return `
     <article class="card">
       <h2 class="card__title">
@@ -430,10 +431,15 @@ function Card({ link, title, feed, date, image, description }) {
         <span>&middot;</span>
         <time>${formatDate(date)}</time>
       </h3>
-      ${image ? `
-        <a href=${link} target="_blank">
-          <img class="card__image" src="${image}" loading="lazy"/>
-        </a>` : ''
+      ${video && video.url ? `
+        <video class="card__video" controls>
+          <source src="${video.url}" type="${video.type}"/>
+        </video>
+        ` :
+          image ? `
+          <a href=${link} target="_blank">
+            <img class="card__image" src="${image}" loading="lazy"/>
+          </a>` : ''
       }
       <p class="card__description">${description}</p>
     </article>
