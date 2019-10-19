@@ -17,6 +17,8 @@
     --gutter-primary: 2rem;
     --time-transition: 200ms;
     --size-menu: 16rem;
+
+    --color-highlight: var(--color-highlight-c);
   }
 
   * {
@@ -194,11 +196,11 @@
   }
 
   .btn--more {
-    border: 1px solid var(--color-highlight-m);
+    border: 1px solid var(--color-highlight);
     padding: .5em 1em;
     border-radius: 1.25em;
     font-size: 1em;
-    color: var(--color-highlight-m);
+    color: var(--color-highlight);
     margin-bottom: 3em;
   }
 
@@ -249,6 +251,20 @@
   .card__description {
     line-height: 1.7em;
     overflow: hidden;
+  }
+
+  .card__actions {
+    font-size: .8em;
+    color: var(--color-highlight);
+  }
+
+  .card__actions .btn {
+    cursor: pointer;
+    padding: .5em;
+  }
+
+  .card__actions .btn:first-child {
+    padding-left: 0;
   }
 
   /* BIG SCREENS */
@@ -362,6 +378,10 @@ document.body.addEventListener('click', (ev) => {
     case 'all':
       fetchAndRender();
       break;
+    case 'share':
+      ev.preventDefault();
+      navigator.share({ url: ev.target.href });
+      break;
     default:
       return;
       break;
@@ -418,7 +438,7 @@ function formatDate(date) {
 }
 
 function More() {
-  return `<button class="btn btn--more" data-action="more">Load next +</button>`;
+  return `<button class="btn btn--more" data-action="more">Load next</button>`;
 }
 
 function Card({ link, title, author, feed, date, image, video, description }) {
@@ -450,6 +470,13 @@ function Card({ link, title, author, feed, date, image, video, description }) {
           </a>` : ''
       }
       <p class="card__description">${description}</p>
+      <aside class="card__actions">
+        <a class="btn btn--goto" href="${link}" target="_blank">Read more</a>
+        ${navigator.share ? `
+          <span>&middot;</span>
+          <a class="btn btn--share" href="${link}" data-action="share">Share</button>
+        ` : ''}
+      <aside>
     </article>
   `;
 }

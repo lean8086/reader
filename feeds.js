@@ -14,7 +14,7 @@ export const feedList = {
   'Unity3d': { domain: 'https://unity3d.com', feed: 'https://blogs.unity3d.com/feed/', altFavicon: 'https://unity.com/themes/contrib/unity_base/images/favicons/apple-touch-icon-72x72.png' },
   'IGN': { domain: 'https://ign.com', feed: 'http://feeds.ign.com/ign/all' },
   'Gamasutra': { domain: 'https://gamasutra.com/', feed: 'http://feeds.feedburner.com/GamasutraNews' },
-  'Gamesindustry': { domain: 'https://www.gamesindustry.biz/', feed: 'https://www.gamesindustry.biz/rss/gamesindustry_news_feed.rss' },
+  'GamesIndustry': { domain: 'https://www.gamesindustry.biz/', feed: 'https://www.gamesindustry.biz/rss/gamesindustry_news_feed.rss' },
   'Prusa3D': { domain: 'https://www.prusa3d.com', feed: 'https://www.prusa3d.com/feed/', altFavicon: 'https://www.prusa3d.com/wp-content/uploads/2014/10/prusa_fav_72x72.png' },
   'Makezine': { domain: 'https://makezine.com', feed: 'https://makezine.com/feed/' },
   'Arduino': { domain: 'https://blog.arduino.cc', feed: 'https://blog.arduino.cc/feed/' },
