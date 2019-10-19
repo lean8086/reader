@@ -230,12 +230,13 @@
     width: 100%;
     border-radius: .5em;
     filter: saturate(75%);
+    margin: 1em 0;
   }
 
   .card__source {
     display: flex;
     align-items: center;
-    font-weight: 550;
+    font-weight: 450;
     font-size: .95em;
   }
 
@@ -444,21 +445,20 @@ function More() {
 function Card({ link, title, author, feed, date, image, video, description }) {
   return `
     <article class="card">
-      <h2 class="card__title">
-        <a class="card__link" href=${link} target="_blank">${title}</a>
-      </h2>
-      ${author ? `<p class="card__author">by ${author}</p>` : ''}
       <h3 class="card__source">
         ${Feed({
           name: Object.keys(feedList)[feed],
           className: 'feed--card',
           ...Object.values(feedList)[feed]
         })}
-        ${date ? `
-          <span>&middot;</span>
-          <time>${formatDate(date)}</time>
-        ` : ''}
       </h3>
+      <h2 class="card__title">
+        <a class="card__link" href=${link} target="_blank">${title}</a>
+      </h2>
+      <p class="card__author">
+        ${author ? `by ${author} <span>&middot;</span> ` : ''}
+        ${date ? `<time>${formatDate(date)}</time>` : ''}
+      </p>
       ${video && video.url ? `
         <video class="card__video" controls>
           <source src="${video.url}" type="${video.type}"/>
