@@ -79,7 +79,6 @@
     width: var(--size-menu);
     position: fixed;
     overflow-y: scroll;
-    padding: var(--gutter-primary);
     height: 100vh;
     background: var(--color-background-secondary);
     z-index: 3;
@@ -151,9 +150,21 @@
 
   /* CONTENT */
   .main {
-    padding: var(--gutter-primary);
-    padding-top: 3rem;
     z-index: 1;
+  }
+
+  .main.gutter--v {
+    padding-top: calc(var(--gutter-primary) * 2);
+  }
+  
+  .gutter--h {
+    padding-left: var(--gutter-primary);
+    padding-right: var(--gutter-primary);
+  }
+  
+  .gutter--v {
+    padding-top: var(--gutter-primary);
+    padding-bottom: var(--gutter-primary);
   }
 
   .main__container {
@@ -228,7 +239,6 @@
   .card__image,
   .card__video {
     width: 100%;
-    border-radius: .5em;
     filter: saturate(75%);
     margin: 1em 0;
   }
@@ -252,6 +262,7 @@
   .card__description {
     line-height: 1.7em;
     overflow: hidden;
+    margin-top: 0;
   }
 
   .card__actions {
@@ -270,6 +281,11 @@
 
   /* BIG SCREENS */
   @media (min-width: 48rem) {
+    .gutter--h {
+      padding-left: 0;
+      padding-right: 0;
+    }
+
     .menu {
       transform: translateX(0);
       font-size: .9em;
@@ -295,7 +311,7 @@
     }
 
     .card__title {
-      font-size: 2.2rem;
+      font-size: 3rem;
     }
   }
 </style>
@@ -303,7 +319,7 @@
 
 
 <input class="menu-collapse" type="checkbox" id="menu-collapse" hidden/>
-<nav class="menu">
+<nav class="menu gutter--h gutter--v">
   <h1 class="menu__logo">Reader</h1>
   <label class="close-menu" for="menu-collapse">&#xd7;</label>
   <section class="menu__options">
@@ -312,7 +328,7 @@
   <h2 class="menu__title">Feeds</h2>
   <!-- Injected groups / feeds here -->
 </nav>
-<main class="main">
+<main class="main gutter--v">
   <header class="main__header">
     <label class="open-menu" for="menu-collapse">&#9776;</label>
   </header>
@@ -414,7 +430,7 @@ const today = new Date();
 
 function fetchAndRender(config = {}) {
   menuCollapse.checked = false;
-  container.innerHTML = '<h2 class="card__title">Loading...</h2>';
+  container.innerHTML = '<h2 class="card__title gutter--h">Loading...</h2>';
   fetch([
     '/api/feeds',
     !config.feed && !config.ids ? `?offset=25&page=${page}` : '',
@@ -445,17 +461,17 @@ function More() {
 function Card({ link, title, author, feed, date, image, video, description }) {
   return `
     <article class="card">
-      <h3 class="card__source">
+      <h3 class="card__source gutter--h">
         ${Feed({
           name: Object.keys(feedList)[feed],
           className: 'feed--card',
           ...Object.values(feedList)[feed]
         })}
       </h3>
-      <h2 class="card__title">
+      <h2 class="card__title gutter--h">
         <a class="card__link" href=${link} target="_blank">${title}</a>
       </h2>
-      <p class="card__author">
+      <p class="card__author gutter--h">
         ${author ? `by ${author} <span>&middot;</span> ` : ''}
         ${date ? `<time>${formatDate(date)}</time>` : ''}
       </p>
@@ -469,8 +485,8 @@ function Card({ link, title, author, feed, date, image, video, description }) {
             <img class="card__image" src="${image}" loading="lazy"/>
           </a>` : ''
       }
-      <p class="card__description">${description}</p>
-      <aside class="card__actions">
+      <p class="card__description gutter--h">${description}</p>
+      <aside class="card__actions gutter--h">
         <a class="btn btn--goto" href="${link}" target="_blank">Read more</a>
         ${navigator.share ? `
           <span>&middot;</span>
