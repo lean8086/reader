@@ -200,6 +200,7 @@
     border-radius: 1.25em;
     font-size: 1em;
     color: var(--color-highlight-m);
+    margin-bottom: 3em;
   }
 
   .menu-collapse:checked + .menu {
@@ -284,7 +285,7 @@
 <input class="menu-collapse" type="checkbox" id="menu-collapse" hidden/>
 <nav class="menu">
   <h1 class="menu__logo">Reader</h1>
-  <label class="close-menu" for="menu-collapse">&#10799;</label>
+  <label class="close-menu" for="menu-collapse">&#xd7;</label>
   <section class="menu__options">
     <button class="btn menu__btn menu__text" data-action="all">All feeds</button>
   </section>
@@ -414,7 +415,7 @@ function formatDate(date) {
 }
 
 function More() {
-  return `<button class="btn btn--more" data-action="more">Load more</button>`;
+  return `<button class="btn btn--more" data-action="more">Load next +</button>`;
 }
 
 function Card({ link, title, feed, date, image, video, description }) {
