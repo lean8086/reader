@@ -15,6 +15,8 @@
     --color-highlight-m: #ce9ece;
     --color-highlight-y: #fecb32;
     --gutter-primary: 2rem;
+    --time-transition: 200ms;
+    --size-menu: 16rem;
   }
 
   * {
@@ -73,14 +75,15 @@
 
   /* MENU */
   .menu {
-    width: 16rem;
+    width: var(--size-menu);
     position: fixed;
     overflow-y: scroll;
     padding: var(--gutter-primary);
     height: 100vh;
     background: var(--color-background-secondary);
     z-index: 3;
-    display: none;
+    transform: translateX(-100%);
+    transition: all var(--time-transition);
   }
 
   .menu__logo {
@@ -121,14 +124,14 @@
   .categ-header__button {
     font-size: .3rem;
     padding: .6rem .4rem;
-    transition: all 200ms;
+    transition: all var(--time-transition);
     cursor: pointer;
     color: var(--color-text-secondary);
   }
 
   .categ-content {
     max-height: 0;
-    transition: all 200ms;
+    transition: all var(--time-transition);
     overflow: hidden;
   }
 
@@ -200,7 +203,7 @@
   }
 
   .menu-collapse:checked + .menu {
-    display: block;
+    transform: translateX(0);
   }
 
   .card {
@@ -247,12 +250,12 @@
   /* BIG SCREENS */
   @media (min-width: 48rem) {
     .menu {
-      display: block;
+      transform: translateX(0);
       font-size: .9em;
     }
 
     .main {
-      margin-left: 16rem;
+      margin-left: var(--size-menu);
     }
 
     .main__container {
