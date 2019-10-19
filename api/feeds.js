@@ -56,7 +56,7 @@ function extractImage(item, description) {
       // 3. <media:content>
       item['media:content'] && item['media:content'][0].$.type && item['media:content'][0].$.type.includes('image') ?
         item['media:content'][0].$.url :
-        // 4 <content:encoded>...<img src="...">
+        // 4. <content:encoded>...<img src="...">
         item['content:encoded'] && /<img/i.test(item['content:encoded']) ?
           extractSrc(item['content:encoded']) :
           // 5. <description>...<img src="...">
@@ -64,6 +64,30 @@ function extractImage(item, description) {
             extractSrc(description) :
             // 6. No image at all
             undefined;
+}
+
+function extractAuthor(item) {
+  // 1. <author>
+  const a = item.author ?
+    item.author.map(a => a.name || a).join(', ') :
+    // 2. <dc:creator>
+    item['dc:creator'] ?
+      item['dc:creator'].join(', ') :
+      // 3. No author at all
+      undefined;
+  // Avoid empty string
+  return a && a.length ? a : undefined;
+}
+
+function extractDate(item) {
+  // 1. <pubdate>
+  return item.pubDate ?
+    item.pubDate[0] :
+    // 2. <published>
+    item.published ?
+      item.published[0] || item.published :
+      // 3. Not date at all?
+      undefined;
 }
 
 function extractContent(xml, feedIndex) {
@@ -75,9 +99,9 @@ function extractContent(xml, feedIndex) {
       ...acc,
       {
         title: item.title[0],
-        author: item.author ? item.author.map(a => a.name || a).join(', ') : item['dc:creator'] ? item['dc:creator'].join(', ') : undefined,
+        author: extractAuthor(item),
         link: item.link[0].$ ? item.link[0].$.href : item.link[0],
-        date: item.pubDate ? item.pubDate[0] : item.published ? item.published[0] || item.published : undefined,
+        date: extractDate(item),
         description: formatDescription(description),
         image: extractImage(item, description),
         video: extractVideo(item),

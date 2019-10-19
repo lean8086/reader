@@ -63,7 +63,6 @@
   .feed__icon {
     width: 1rem;
     height: 1rem;
-    border-radius: 1px;
     margin-right: .35rem;
     pointer-events: none;
   }
@@ -218,6 +217,10 @@
     font-weight: 700;
     line-height: 1.25em;
     margin: 0;
+  }
+
+  .card__author {
+    font-size: .6em;
   }
 
   .card__image,
@@ -418,20 +421,23 @@ function More() {
   return `<button class="btn btn--more" data-action="more">Load next +</button>`;
 }
 
-function Card({ link, title, feed, date, image, video, description }) {
+function Card({ link, title, author, feed, date, image, video, description }) {
   return `
     <article class="card">
       <h2 class="card__title">
         <a class="card__link" href=${link} target="_blank">${title}</a>
       </h2>
+      ${author ? `<p class="card__author">by ${author}</p>` : ''}
       <h3 class="card__source">
         ${Feed({
           name: Object.keys(feedList)[feed],
           className: 'feed--card',
           ...Object.values(feedList)[feed]
         })}
-        <span>&middot;</span>
-        <time>${formatDate(date)}</time>
+        ${date ? `
+          <span>&middot;</span>
+          <time>${formatDate(date)}</time>
+        ` : ''}
       </h3>
       ${video && video.url ? `
         <video class="card__video" controls>
