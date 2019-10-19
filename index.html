@@ -388,7 +388,7 @@ document.body.addEventListener('click', (ev) => {
   }
 });
 
-function Feed({ domain, altFavicon, name, className }) {
+function Feed({ domain, icon, name, className }) {
   return `
     <a
       href=${domain}
@@ -398,7 +398,7 @@ function Feed({ domain, altFavicon, name, className }) {
       data-feed="${name}"
     >
       <img
-        src="${!altFavicon ? `${domain}/favicon.ico` : altFavicon}"
+        src="${!icon ? `${domain}/favicon.ico` : icon}"
         class="feed__icon"
       />
       <span class="feed__name">${name}</span>
