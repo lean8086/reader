@@ -129,6 +129,11 @@
     color: var(--color-text-secondary);
   }
 
+  .categ-header__icon {
+    color: transparent;
+    text-shadow: 0 0 0 var(--color-text-primary);
+  }
+
   .categ-content {
     max-height: 0;
     transition: all var(--time-transition);
@@ -358,7 +363,10 @@ function Categ({ name }) {
       <input class="categ__collapse" type="checkbox" id="${name}" hidden/>
       <label class="categ-header" for="${name}">
         <span class="categ-header__button">&#9654;</span>
-        <h3 class="categ-header__name menu__text">${name}</h3>
+        <h3 class="categ-header__name menu__text">
+          <span class="categ-header__icon">${feedCategs[name].icon}</span>
+          ${name}
+        </h3>
       </label>
       <div class="categ-content">
         <a class="feed feed--menu menu__text" href="#" data-action="categ" data-categ="${name}">

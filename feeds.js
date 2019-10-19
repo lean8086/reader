@@ -30,21 +30,23 @@ export const feedList = {
 
 export const feedCategs = {
   'Technology': {
-    feeds: '0,1,2,3,4,5,6,7,8,9',
+    feeds: '0,1,2,3,4,5,6,7,8,9,26',
+    icon: '🚀',
   },
   'Gaming': {
     feeds: '10,11,13,14,15',
+    icon: '🕹',
   },
   'Makers': {
     feeds: '16,17,18,19,20,21',
+    icon: '🛠',
   },
   'Coding': {
     feeds: '12,22,23,24',
+    icon: '🖥',
   },
   'Business': {
     feeds: '25',
-  },
-  'Space': {
-    feeds: '26',
+    icon: '💰',
   },
 };
