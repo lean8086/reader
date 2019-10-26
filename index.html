@@ -115,17 +115,23 @@
     padding-left: 1em;
   }
 
+  .menu__btn {
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
+
   .categ-header {
     display: flex;
     align-items: center;
     transform: translateX(-.5em);
+    cursor: pointer;
   }
 
   .categ-header__button {
     font-size: .3rem;
     padding: .6rem .4rem;
     transition: all var(--time-transition);
-    cursor: pointer;
     color: var(--color-text-secondary);
   }
 
@@ -217,7 +223,8 @@
     border-radius: 1.25em;
     font-size: 1em;
     color: var(--color-highlight);
-    margin-bottom: 3em;
+    margin: 0 auto 3em;
+    display: block
   }
 
   .menu-collapse:checked + .menu {
@@ -286,7 +293,7 @@
 
   /* BIG SCREENS */
   @media (min-width: 48rem) {
-    .gutter--h {
+    main .gutter--h {
       padding-left: 0;
       padding-right: 0;
     }
@@ -317,6 +324,10 @@
 
     .card__title {
       font-size: 3rem;
+    }
+
+    .card__author {
+      font-size: .9em;
     }
   }
 </style>
@@ -390,17 +401,20 @@ document.body.addEventListener('click', (ev) => {
   switch (dataset.action) {
     case 'feed':
       ev.preventDefault();
+      page = 1;
       fetchAndRender({ feed: dataset.feed });
       break;
     case 'categ':
       ev.preventDefault();
+      page = 1;
       fetchAndRender({ ids: feedCategs[dataset.categ].feeds });
       break;
     case 'more':
       page++;
-      fetchAndRender();
+      fetchAndRender({ feed: dataset.feed, ids: dataset.ids });
       break;
     case 'all':
+      page = 1;
       fetchAndRender();
       break;
     case 'share':
@@ -434,20 +448,22 @@ function Feed({ domain, icon, name, className }) {
 // CONTAINER /////////////////////////////////////////
 
 let page = 1;
-const today = new Date();
+const limit = 20;
 
 function fetchAndRender(config = {}) {
   menuCollapse.checked = false;
   container.innerHTML = '<h2 class="card__title gutter--h">Loading...</h2>';
   fetch([
-    '/api/feeds',
-    !config.feed && !config.ids ? `?offset=25&page=${page}` : '',
-    config.feed ? `?feed=${config.feed}` : '',
-    config.ids ? `?ids=${config.ids}` : '',
+    `/api/feeds?limit=${limit}&page=${page}`,
+    config.feed ? `&feed=${config.feed}` : '',
+    config.ids ? `&ids=${config.ids}` : '',
   ].join(''))
     .then(res => res.json())
-    .then(items => items.map(Card).join(''))
-    .then(content => container.innerHTML = `${content}${!config.feeds && !config.ids ? More() : ''}`);
+    .then(items => items.map(Card))
+    .then(items => container.innerHTML = `
+      ${items.join('')}
+      ${items.length > limit ? More({ feed: config.feed, ids: config.ids }) : ''}
+    `);
 }
 fetchAndRender();
 
@@ -458,12 +474,18 @@ function formatDate(date) {
   const h = d.getHours() % 12 || 12;
   const m = `0${d.getMinutes()}`.slice(-2);
   const time = `${h}:${m} ${ampm}`;
-  const isFromToday = d.getDay() === today.getDay();
+  const isFromToday = d.getDay() === new Date().getDay();
   return isFromToday ? time : `${months[d.getMonth()]} ${d.getDate()}, ${time}`;
 }
 
-function More() {
-  return `<button class="btn btn--more" data-action="more">Load next</button>`;
+function More({ feed, ids }) {
+  return `
+    <button
+      class="btn btn--more"
+      data-action="more"
+      ${feed ? `data-feed="${feed}"` : ''}
+      ${ids ? `data-ids="${ids}"` : ''}
+    >Load next</button>`;
 }
 
 function Card({ link, title, author, feed, date, image, video, description }) {

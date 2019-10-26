@@ -71,10 +71,9 @@ function extractAuthor(item) {
   const a = item.author ?
     item.author.map(a => a.name || a).join(', ') :
     // 2. <dc:creator>
-    item['dc:creator'] ?
-      item['dc:creator'].join(', ') :
-      // 3. No author at all
-      undefined;
+    item['dc:creator'] && item['dc:creator'][0]._ ?
+      item['dc:creator'][0]._ :
+        item['dc:creator'].join(', ');
   // Avoid empty string
   return a && a.length ? a : undefined;
 }
@@ -137,14 +136,12 @@ function fetchById(ids) {
   return Promise.all(
     Object.values(feedList)
       .filter((x, i) => indexes.includes(i.toString()))
-      .map(({ feed }, feedIndex) => {
-        return f(feed, indexes[feedIndex]);
-      })
+      .map(({ feed }, feedIndex) => f(feed, indexes[feedIndex]))
   );
 }
 
 module.exports = async (req, res) => {
-  const { offset, page = 1, feed, ids } = req.query;
+  const { limit, page = 1, feed, ids } = req.query;
   // Get by feed / ids / all
   let items = feed ? await fetchByFeed(feed) : ids ? await fetchById(ids) : await fetchAll();
   // Flat merge all the results
@@ -152,8 +149,8 @@ module.exports = async (req, res) => {
   // Sort by date
   items = items.sort((a, b) => new Date(b.date) - new Date(a.date));
   // Paginate
-  if (offset) {
-    items = items.slice(offset * (page - 1), offset * page);
+  if (limit) {
+    items = items.slice(limit * (page - 1), limit * page);
   }
   res.send(items);
 };
