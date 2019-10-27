@@ -383,12 +383,17 @@ function Categ({ name }) {
         <a class="feed feed--menu menu__text" href="#" data-action="categ" data-categ="${name}">
           All updates
         </a>
-        ${feedCategs[name].feeds.split(',').map(feedIndex => Feed({
-          className: 'feed--menu menu__text',
-          name: feedListKeys[feedIndex],
-          id: feedIndex,
-          ...feedListValues[feedIndex],
-        })).join('')}
+        ${feedCategs[name].feeds
+          .split(',')
+          .sort((a, b) => feedListKeys[a] < feedListKeys[b] ? -1 : feedListKeys[a] > feedListKeys[b])
+          .map(feedIndex => Feed({
+            className: 'feed--menu menu__text',
+            name: feedListKeys[feedIndex],
+            id: feedIndex,
+            ...feedListValues[feedIndex],
+          }))
+          .join('')
+        }
       </div>
     </section>
   `;

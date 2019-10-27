@@ -29,6 +29,7 @@ export const feedList = {
   'Fast Company': { domain: 'https://www.fastcompany.com', feed: 'http://feeds.feedburner.com/fastcompany/headlines', icon: 'https://www.fastcompany.com/favicon-32x32.png?v=5' },
   'CleanTechnica': { domain: 'https://cleantechnica.com', feed: 'https://cleantechnica.com/feed/', icon: 'https://cleantechnica.com/files/2013/07/ct-favicon.png' },
   'RetroGamer': { domain: 'https://www.retrogamer.net', feed: 'https://www.retrogamer.net/feed/' },
+  'Prusa Printers': { domain: 'https://blog.prusaprinters.org', feed: 'https://blog.prusaprinters.org/feed/', icon: 'https://cdn.blog.prusaprinters.org/wp-content/themes/blog-prusaprinters/favicons/favicon-32x32.png' },
 };
 
 export const feedCategs = {
@@ -41,7 +42,7 @@ export const feedCategs = {
     icon: '🕹',
   },
   'Makers': {
-    feeds: '16,17,18,19,20,21',
+    feeds: '16,17,18,19,20,21,30',
     icon: '🛠',
   },
   'Coding': {

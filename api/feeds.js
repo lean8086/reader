@@ -73,7 +73,9 @@ function extractAuthor(item) {
     // 2. <dc:creator>
     item['dc:creator'] && item['dc:creator'][0]._ ?
       item['dc:creator'][0]._ :
-        item['dc:creator'].join(', ');
+      item['dc:creator'] ?
+        item['dc:creator'].join(', ') :
+        undefined;
   // Avoid empty string
   return a && a.length ? a : undefined;
 }
