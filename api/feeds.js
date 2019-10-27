@@ -118,16 +118,10 @@ function f(url, feedIndex) {
     .catch(() => {});
 }
 
-function fetchByFeed(feedName) {
-  const feedIndex = Object.keys(feedList).indexOf(feedName);
-  return f(feedList[feedName].feed, feedIndex);
-}
-
 function fetchAll() {
   return Promise.all(
-    Object.values(feedList).map(({ feed }, feedIndex) => {
-      return f(feed, feedIndex);
-    })
+    Object.values(feedList)
+      .map(({ feed }, feedIndex) => f(feed, feedIndex))
   );
 }
 
@@ -135,22 +129,26 @@ function fetchById(ids) {
   const indexes = ids.split(',');
   return Promise.all(
     Object.values(feedList)
-      .filter((x, i) => indexes.includes(i.toString()))
+      .filter((_, i) => indexes.includes(i.toString()))
       .map(({ feed }, feedIndex) => f(feed, indexes[feedIndex]))
   );
 }
 
 module.exports = async (req, res) => {
-  const { limit, page = 1, feed, ids } = req.query;
-  // Get by feed / ids / all
-  let items = feed ? await fetchByFeed(feed) : ids ? await fetchById(ids) : await fetchAll();
+  const { limit = 10, page = 1, ids } = req.query;
+  const t0 = new Date();
+  // Get by ids / all
+  let items = ids ? await fetchById(ids) : await fetchAll();
   // Flat merge all the results
   items = [].concat.apply([], items);
   // Sort by date
   items = items.sort((a, b) => new Date(b.date) - new Date(a.date));
   // Paginate
-  if (limit) {
-    items = items.slice(limit * (page - 1), limit * page);
-  }
-  res.send(items);
+  const data = items.slice(limit * (page - 1), limit * page);
+
+  res.send({
+    total: items.length,
+    data,
+    ms: new Date() - t0,
+  });
 };

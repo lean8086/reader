@@ -386,6 +386,7 @@ function Categ({ name }) {
         ${feedCategs[name].feeds.split(',').map(feedIndex => Feed({
           className: 'feed--menu menu__text',
           name: feedListKeys[feedIndex],
+          id: feedIndex,
           ...feedListValues[feedIndex],
         })).join('')}
       </div>
@@ -402,7 +403,7 @@ document.body.addEventListener('click', (ev) => {
     case 'feed':
       ev.preventDefault();
       page = 1;
-      fetchAndRender({ feed: dataset.feed });
+      fetchAndRender({ ids: dataset.ids });
       break;
     case 'categ':
       ev.preventDefault();
@@ -411,7 +412,7 @@ document.body.addEventListener('click', (ev) => {
       break;
     case 'more':
       page++;
-      fetchAndRender({ feed: dataset.feed, ids: dataset.ids });
+      fetchAndRender({ ids: dataset.ids });
       break;
     case 'all':
       page = 1;
@@ -427,14 +428,14 @@ document.body.addEventListener('click', (ev) => {
   }
 });
 
-function Feed({ domain, icon, name, className }) {
+function Feed({ domain, icon, name, id, className }) {
   return `
     <a
       href=${domain}
       class="feed${className ? ` ${className}` : ''}"
       target="_blank"
       data-action="feed"
-      data-feed="${name}"
+      data-ids="${id}"
     >
       <img
         src="${!icon ? `${domain}/favicon.ico` : icon}"
@@ -453,16 +454,12 @@ const limit = 20;
 function fetchAndRender(config = {}) {
   menuCollapse.checked = false;
   container.innerHTML = '<h2 class="card__title gutter--h">Loading...</h2>';
-  fetch([
-    `/api/feeds?limit=${limit}&page=${page}`,
-    config.feed ? `&feed=${config.feed}` : '',
-    config.ids ? `&ids=${config.ids}` : '',
-  ].join(''))
+  fetch(`/api/feeds?limit=${limit}&page=${page}${config.ids ? `&ids=${config.ids}` : ''}`)
     .then(res => res.json())
-    .then(items => items.map(Card))
-    .then(items => container.innerHTML = `
-      ${items.join('')}
-      ${items.length > limit ? More({ feed: config.feed, ids: config.ids }) : ''}
+    .then(res => ({ ...res, items: res.data.map(Card) }))
+    .then(res => container.innerHTML = `
+      ${res.items.join('')}
+      ${res.total > limit ? More({ ids: config.ids }) : ''}
     `);
 }
 fetchAndRender();
@@ -483,7 +480,6 @@ function More({ feed, ids }) {
     <button
       class="btn btn--more"
       data-action="more"
-      ${feed ? `data-feed="${feed}"` : ''}
       ${ids ? `data-ids="${ids}"` : ''}
     >Load next</button>`;
 }
@@ -494,6 +490,7 @@ function Card({ link, title, author, feed, date, image, video, description }) {
       <h3 class="card__source gutter--h">
         ${Feed({
           name: Object.keys(feedList)[feed],
+          id: Object.keys(feedList).indexOf(feed),
           className: 'feed--card',
           ...Object.values(feedList)[feed]
         })}
