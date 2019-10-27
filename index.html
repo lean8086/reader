@@ -416,6 +416,7 @@ document.body.addEventListener('click', (ev) => {
       fetchAndRender({ ids: feedCategs[dataset.categ].feeds });
       break;
     case 'more':
+      ev.stopPropagation();
       page++;
       fetchAndRender({ ids: dataset.ids });
       break;
