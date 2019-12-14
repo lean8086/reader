@@ -13,6 +13,10 @@
   --color-highlight: var(--color-highlight-c);
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -79,18 +83,8 @@ a {
 }
 
 .menu__logo {
-  background-image: url('gator.png');
-  background-repeat: no-repeat;
-  font-size: 0;
-  width: 26px;
-  height: 8px;
-  transform: scale(3);
-  transform-origin: 0 0;
-
-  -ms-interpolation-mode: nearest-neighbor;
-  image-rendering: -moz-crisp-edges;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: pixelated;
+  margin: 0;
+  font-size: 3em;
 }
 
 .menu__title {
@@ -105,7 +99,7 @@ a {
 }
 
 .menu__options {
-  margin: calc(var(--gutter-primary) * 2) 0 var(--gutter-primary);
+  margin: var(--gutter-primary) 0;
   display: block;
 }
 
