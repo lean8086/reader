@@ -1,4 +1,4 @@
-# Simple Reader
+# Aggregator
 
 > Built to avoid all noise and buzz from Twitter. Vanilla HTML, CSS & JS implementation.
 
