@@ -5,11 +5,11 @@
   <title>Aggregator</title>
   <meta name="viewport" content="width=device-width">
   <meta name="description" content="News feed aggregator">
-  <link rel="shortcut icon" href="favicon.png">
-  <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="./favicon.svg">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="manifest" href="./manifest.json">
   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <input class="menu-collapse" type="checkbox" id="menu-collapse" hidden/>
@@ -29,8 +29,8 @@
     <div class="main__container"></div>
   </main>
 
-  <script src="menu.mjs" type="module"></script>
-  <script src="container.mjs" type="module"></script>
+  <script src="./menu.mjs" type="module"></script>
+  <script src="./container.mjs" type="module"></script>
   <script type="module">
     import { fetchAndRender } from './fetch.mjs';
     fetchAndRender();

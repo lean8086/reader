@@ -19,9 +19,9 @@ export function Categ({ name }) {
         </h3>
       </label>
       <div class="categ-content">
-        <a class="feed feed--menu menu__text" href="#" data-action="categ" data-categ="${name}">
+        <!-- <a class="feed feed--menu menu__text" href="#" data-action="categ" data-categ="${name}">
           All updates
-        </a>
+        </a> -->
         ${feedCategs[name].feeds
           .split(',')
           .sort((a, b) => feedListKeys[a] < feedListKeys[b] ? -1 : feedListKeys[a] > feedListKeys[b])
